@@ -2,11 +2,14 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    colors: {
-      main: "#E3DDE0",
-      widget: "#888485",
+    extend: {
+      colors: {
+        main: "#E3DDE0",
+        widget: "#888485",
+        input: "#BCBEC0",
+        button: "#FBF9FA",
+      },
     },
-    extend: {},
   },
   plugins: [],
 };
