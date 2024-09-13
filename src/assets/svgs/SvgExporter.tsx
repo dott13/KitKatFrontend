@@ -6,7 +6,6 @@ interface SvgIconProps {
 }
 
 const OutlookIcon: React.FC<SvgIconProps> = ({
-  fill = "currentColor",
   className = "",
 }) => {
   return (
