@@ -16,7 +16,7 @@ const validatePassword = (password: string): string[] => {
     { regex: /[A-Z]/, message: "Include upper-case letter(s) [A-Z]" },
     { regex: /[0-9]/, message: "Include numbers [0-9]" },
     {
-      regex: /[!@#$%^&*()_+{}\[\]:;"'<>,.?/~|\\-]/,
+      regex: /[!@#$%^&*()_+{}[\]:;"'<>,.?/~|\\-]/,
       message: "Include symbols [!@#$%^&*()...]",
     },
     { regex: /.{8,}/, message: "Make it at least 8 characters long." },

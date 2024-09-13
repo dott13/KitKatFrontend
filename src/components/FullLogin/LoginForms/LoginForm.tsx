@@ -9,9 +9,10 @@ import { FaRegEye } from "react-icons/fa";
 interface LoginFormData {
   email: string;
   password: string;
+  toggleForm: () => void
 }
-const LoginForm: React.FC = () => {
-  const [formData, setFormData] = useState<LoginFormData>({
+const LoginForm: React.FC<LoginFormData> = ( {toggleForm} ) => {
+  const [formData, setFormData] = useState< Partial<LoginFormData>>({
     email: "",
     password: "",
   });
@@ -62,6 +63,7 @@ const [showPassword, setShowPassword] = useState<boolean>(false)
       setFormData({
         email: "",
         password: "",
+
       });
     }
   };
@@ -147,7 +149,7 @@ const [showPassword, setShowPassword] = useState<boolean>(false)
             <p className={"my-6  text-xs"}>
               Don't have account yet?
               <a className={"font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"}
-                 // href={registerForm.link}
+                 onClick={toggleForm}
                >  Register here</a>
             </p>
           </div>
