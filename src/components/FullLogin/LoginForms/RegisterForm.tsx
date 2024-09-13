@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import OutlookIcon from "../../../assets/svgs/SvgExporter";
+import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 
 interface RegisterFormData {
   email: string;
@@ -37,6 +38,9 @@ const RegisterForm: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+
 
   const [formErrors, setFormErrors] = useState<
     Partial<Record<keyof RegisterFormData, string[]>>
@@ -141,7 +145,7 @@ const RegisterForm: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Email"
-              className={`w-full px-3 py-1 mt-2 text-sm border text-input ${
+              className={`w-full px-3 py-1 mt-2 text-sm border text-black ${
                 formErrors.email ? "border-red-500" : "border-gray-300"
               } rounded`}
             />
@@ -154,23 +158,38 @@ const RegisterForm: React.FC = () => {
             <label htmlFor="password" className="block text-sm">
               Password:
             </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className={`w-full px-3 py-1 mt-2 border text-sm text-input ${
-                formErrors.password ? "border-red-500" : "border-gray-300"
-              } rounded`}
-            />
+
+
+
+            <div
+                className={` px-3 py-1 mt-2 border flex justify-between items-center ${formErrors.password ? "border-red-500" : "border-gray-300"} rounded bg-gray-50 `}
+            >
+              <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  className={`text-sm text-black bg-gray-50 focus:border-none focus:outline-none`}
+              />
+              <div
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaRegEyeSlash className={"text-gray-500"}/> : <FaRegEye className={"text-gray-500"}/>}
+
+              </div>
+
+            </div>
+
+
             {formErrors.password && (
-              <ul className="text-red-500 text-sm mt-1 list-disc pl-5">
-                {formErrors.password.map((error, idx) => (
-                  <li key={idx}>{error}</li>
-                ))}
-              </ul>
+                <ul className="text-red-500 text-sm mt-1 list-disc pl-5">
+                  {formErrors.password.map((error, idx) => (
+                      <li key={idx}>{error}</li>
+                  ))}
+                </ul>
             )}
           </div>
 
@@ -179,37 +198,37 @@ const RegisterForm: React.FC = () => {
               Confirm Password:
             </label>
             <input
-              type="password"
-              name="confirmPassword"
-              id="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm Password"
-              className={`w-full px-3 py-1 mt-2 border text-sm text-input ${
-                formErrors.confirmPassword
-                  ? "border-red-500"
-                  : "border-gray-300"
-              } rounded`}
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm Password"
+                className={`w-full px-3 py-1 mt-2 border text-sm text-black ${
+                    formErrors.confirmPassword
+                        ? "border-red-500"
+                        : "border-gray-300"
+                } rounded`}
             />
             {formErrors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {formErrors.confirmPassword[0]}
-              </p>
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.confirmPassword[0]}
+                </p>
             )}
           </div>
 
           <button
-            type="submit"
-            className="bg-button text-black text-center mt-8 w-full py-4 font-bold text-base"
+              type="submit"
+              className="bg-button text-black text-center mt-8 w-full py-4 font-bold text-base rounded"
           >
             Register
           </button>
           <p className="text-[13px] my-6 text-center">or continue with</p>
-          <div className="flex justify-center items-center mb-6">
-            <button className="bg-button w-36 py-3 mr-3">
+          <div className="flex justify-center items-center mb-6 ">
+            <button className="bg-button w-36 py-3 mr-3 rounded">
               <FcGoogle className="m-auto" size={24} />
             </button>
-            <button className="bg-button w-36 py-3 ml-3">
+            <button className="bg-button w-36 py-3 ml-3 rounded">
               <OutlookIcon className="m-auto" />
             </button>
           </div>
