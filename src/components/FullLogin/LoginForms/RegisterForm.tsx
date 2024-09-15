@@ -148,7 +148,7 @@ const RegisterForm: React.FC = () => {
         localStorage.setItem("token", resultAction.token);
 
         // Redirect to home page
-        navigate("/");
+        navigate("/dashboard");
       } catch (error) {
         // Handle errors from registration or login
         if (error instanceof Error) {

@@ -4,6 +4,12 @@ import OutlookIcon from "../../../assets/svgs/SvgExporter.tsx";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 
+import {loginUser} from "../../../redux/userSlice/userSlice.tsx";
+import { AppDispatch } from "../../../redux/store/configureStore";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+
 
 
 interface LoginFormData {
@@ -25,6 +31,9 @@ const [showPassword, setShowPassword] = useState<boolean>(false)
       Partial<Record<keyof LoginFormData, string[]>>
   >({});
 
+
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate(); // Hook for navigation
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,16 +64,29 @@ const [showPassword, setShowPassword] = useState<boolean>(false)
 
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Form Data Submitted:", formData);
-      setFormData({
-        email: "",
-        password: "",
+      try {
+        const response = await dispatch(
+            loginUser({
+              email: formData.email as string,
+              password: formData.password as string,
+            })
+        ).unwrap();
 
-      });
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("login", String(1));
+
+        navigate("/dashboard");
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Error during registration or login:", error.message);
+        } else {
+          console.error("Unknown error:", error);
+        }
+      }
     }
   };
 

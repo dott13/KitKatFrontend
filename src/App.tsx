@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LoginPageView from "./components/FullLogin/LoginPage/LoginPageView";
+import DashboardPageView from "./components/dashboard/DashboardPageView.tsx";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginPageView />} />
+          <Route path="/dashboard" element={<DashboardPageView />} />
         </Routes>
       </BrowserRouter>
     </div>
