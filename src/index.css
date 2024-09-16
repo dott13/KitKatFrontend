@@ -10,3 +10,11 @@
   font-family: "Libre Franklin", sans-serif;
   color: white;
 }
+
+.custom-tooltip .ant-tooltip-inner {
+  @apply bg-gray-800 bg-opacity-90 text-red-500 p-2 rounded-lg text-sm;
+}
+
+.custom-tooltip .ant-tooltip-arrow {
+  @apply border-gray-800;
+}
