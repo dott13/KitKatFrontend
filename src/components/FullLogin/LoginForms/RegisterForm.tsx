@@ -174,6 +174,7 @@ const RegisterForm: React.FC = () => {
     }
   };
 
+  //Function to get both errors for not having an email and the backend part of email validation
   const getEmailErrorTooltipContent = () => {
     // Merge frontend validation errors with backend errors
     const errors = formErrors.email ? [...formErrors.email] : [];
@@ -181,6 +182,18 @@ const RegisterForm: React.FC = () => {
       errors.push(backendErrors);
     }
     return errors.join(", ");
+  };
+
+  //Function to make the password errors as an unorganized list so we can see them more clearly
+  //and without it being so chaotic
+  const getPasswordErrorTooltipContent = () => {
+    return (
+      <ul className="list-disc list-inside">
+        {formErrors.password?.map((error, index) => (
+          <li key={index}>{error}</li>
+        ))}
+      </ul>
+    );
   };
 
   return (
@@ -208,7 +221,11 @@ const RegisterForm: React.FC = () => {
                 } rounded relative`}
               />
               {(formErrors.email || backendErrors) && (
-                <Tooltip title={getEmailErrorTooltipContent} placement="top">
+                <Tooltip
+                  title={getEmailErrorTooltipContent}
+                  placement="top"
+                  overlayClassName="custom-tooltip" //Class for changing the style of antds tooltips
+                >
                   <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
                 </Tooltip>
               )}
@@ -232,7 +249,11 @@ const RegisterForm: React.FC = () => {
                 } rounded relative`}
               />
               {formErrors.password && (
-                <Tooltip title={formErrors.password.join(", ")} placement="top">
+                <Tooltip
+                  title={getPasswordErrorTooltipContent}
+                  placement="top"
+                  overlayClassName="custom-tooltip"
+                >
                   <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items" />
                 </Tooltip>
               )}
@@ -268,7 +289,11 @@ const RegisterForm: React.FC = () => {
                 } rounded relative`}
               />
               {formErrors.confirmPassword && (
-                <Tooltip title={formErrors.confirmPassword[0]} placement="top">
+                <Tooltip
+                  title={formErrors.confirmPassword[0]}
+                  placement="top"
+                  overlayClassName="custom-tooltip"
+                >
                   <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
                 </Tooltip>
               )}
