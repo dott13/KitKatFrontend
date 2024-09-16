@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import OutlookIcon from "../../../assets/svgs/SvgExporter";
@@ -173,52 +174,52 @@ const RegisterForm: React.FC = () => {
     }
   };
 
+  const getEmailErrorTooltipContent = () => {
+    // Merge frontend validation errors with backend errors
+    const errors = formErrors.email ? [...formErrors.email] : [];
+    if (backendErrors) {
+      errors.push(backendErrors);
+    }
+    return errors.join(", ");
+  };
+
   return (
     <div className="w-96 m-auto bg-widget border-solid border-inherit border-[1px] rounded-[10px] mt-10">
       <h2 className="text-xl font-bold pt-6 text-center">Your Logo</h2>
       <form onSubmit={handleSubmit}>
         <div className="mt-4 pb-6 flex flex-col mx-12">
           <h3 className="text-xl font-bold">Register</h3>
-
-          {backendErrors && (
-            <div
-              className="fixed top-2 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4 border border-black text-black text-sm rounded-md flex items-center"
-              style={{ zIndex: 1000 }}
-            >
-              <FiAlertTriangle className="mr-2 text-yellow-500" size={20} />
-              {backendErrors}
-            </div>
-          )}
-
           <div className="mt-4">
             <label htmlFor="email" className="block text-sm">
               Email:
             </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className={`w-full px-3 py-1 mt-2 text-sm border text-black ${
-                formErrors.email ? "border-red-500" : "border-gray-300"
-              } rounded`}
-            />
-            {formErrors.email && (
-              <p className="text-red-500 text-sm mt-1">{formErrors.email[0]}</p>
-            )}
+            <div className="relative flex items-center">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                className={`w-full pl-10 pr-3 py-1 mt-2 text-sm border text-black ${
+                  formErrors.email || backendErrors
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded relative`}
+              />
+              {(formErrors.email || backendErrors) && (
+                <Tooltip title={getEmailErrorTooltipContent} placement="top">
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
+                </Tooltip>
+              )}
+            </div>
           </div>
 
           <div className="mt-4">
             <label htmlFor="password" className="block text-sm">
               Password:
             </label>
-            <div
-              className={`px-3 py-1 mt-2 border flex justify-between items-center ${
-                formErrors.password ? "border-red-500" : "border-gray-300"
-              } rounded bg-gray-50`}
-            >
+            <div className="relative flex items-center">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -226,11 +227,18 @@ const RegisterForm: React.FC = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
-                className="text-sm text-black bg-gray-50 focus:border-none focus:outline-none"
+                className={`w-full pl-10 pr-3 py-1 mt-2 text-sm text-black border ${
+                  formErrors.password ? "border-red-500" : "border-gray-300"
+                } rounded relative`}
               />
+              {formErrors.password && (
+                <Tooltip title={formErrors.password.join(", ")} placement="top">
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items" />
+                </Tooltip>
+              )}
               <div
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-3 cursor-pointer top-[40%]"
               >
                 {showPassword ? (
                   <FaRegEyeSlash className="text-gray-500" />
@@ -239,37 +247,32 @@ const RegisterForm: React.FC = () => {
                 )}
               </div>
             </div>
-            {formErrors.password && (
-              <ul className="text-red-500 text-sm mt-1 list-disc pl-5">
-                {formErrors.password.map((error, idx) => (
-                  <li key={idx}>{error}</li>
-                ))}
-              </ul>
-            )}
           </div>
 
           <div className="mt-4">
             <label htmlFor="confirmPassword" className="block text-sm">
               Confirm Password:
             </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              id="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm Password"
-              className={`w-full px-3 py-1 mt-2 border text-sm text-black ${
-                formErrors.confirmPassword
-                  ? "border-red-500"
-                  : "border-gray-300"
-              } rounded`}
-            />
-            {formErrors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {formErrors.confirmPassword[0]}
-              </p>
-            )}
+            <div className="relative flex items-center">
+              <input
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm Password"
+                className={`w-full pl-10 pr-3 py-1 mt-2 text-sm border text-black ${
+                  formErrors.confirmPassword
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded relative`}
+              />
+              {formErrors.confirmPassword && (
+                <Tooltip title={formErrors.confirmPassword[0]} placement="top">
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
+                </Tooltip>
+              )}
+            </div>
           </div>
 
           <button
