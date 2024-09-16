@@ -8,6 +8,10 @@ import { loginUser } from "../../../redux/userSlice/userSlice.tsx";
 import { AppDispatch } from "../../../redux/store/configureStore";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import "./login-button.css"
+
+
+
 
 interface LoginFormData {
   email: string;
@@ -157,35 +161,34 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
             Forgot Password?
           </a>
 
-          <button
-            type="submit"
-            className="bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded"
-          >
-            Log in
-          </button>
-
-          <p className="text-[13px] my-6 text-center">or continue with</p>
-          <div className="flex justify-center items-center">
-            <button className="bg-button w-36 py-3 mr-3 rounded">
-              <FcGoogle className="m-auto" size={24} />
-            </button>
-            <button className="bg-button w-36 py-3 ml-3 rounded">
-              <OutlookIcon className="m-auto" />
-            </button>
-          </div>
-          <p className="my-6 text-xs">
-            Don't have an account yet?
-            <a
-              className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
-              onClick={toggleForm}
+            <button
+                type="submit"
+                className="login-animated-button bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded "
             >
-              Register here
-            </a>
-          </p>
-        </div>
-      </form>
-    </div>
-  );
+              Log in
+            </button>
+
+            <p className="text-[13px] my-6 text-center">or continue with</p>
+            <div className=" flex justify-center items-center ">
+              <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded">
+                <FcGoogle className="m-auto" size={24}/>
+              </button>
+              <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
+                <OutlookIcon className="m-auto"/>
+              </button>
+            </div>
+            <p className={"my-6  text-xs"}>
+              Don't have an account yet?
+              <a
+                  className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
+                 onClick={toggleForm}
+              >  Register here
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
+  )
 };
 
 export default LoginForm;

@@ -1,0 +1,32 @@
+.login-animated-button{
+    transition: transform 0.2s ease;
+}
+.login-animated-button:hover{
+    animation: colorTransition 0.2s ease;
+    transform: scale(0.99);
+    background-color: #2e2e2e;
+    color: #fff;
+}
+
+
+.login-animated-button:active {
+    background-color: #2e2e2e;
+    transform: scale(0.97);
+}
+
+
+@keyframes colorTransition {
+    0% {
+        background-color: #ffffff;
+        color: #000;
+    }
+    75% {
+        background-color: #2e2e2e;
+        color: #2e2e2e;
+    }
+
+    100% {
+        background-color: #2e2e2e;
+        color: #fff;
+    }
+}
