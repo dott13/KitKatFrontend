@@ -40,7 +40,7 @@ export const registerUser = createAsyncThunk<
   { rejectValue: string } // Reject type
 >("user/registerUser", async (userInfo, thunkAPI) => {
   try {
-    const response = await axios.post("/user/register", userInfo);
+    const response = await axios.post("/api/register", userInfo);
     return response.data;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(

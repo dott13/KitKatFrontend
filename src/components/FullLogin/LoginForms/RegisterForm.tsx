@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerUser, loginUser } from "../../../redux/userSlice/userSlice"; // Import the actions
 import { AppDispatch } from "../../../redux/store/configureStore";
+import { FiAlertTriangle } from "react-icons/fi";
 
 interface RegisterFormData {
   email: string;
@@ -50,6 +51,7 @@ const RegisterForm: React.FC = () => {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<RegisterFormErrors>({});
+  const [backendErrors, setBackendErrors] = useState<string | null>(null);
 
   //Dispatch Hook from redux to get information from our slices in the store
   const dispatch = useDispatch<AppDispatch>();
@@ -151,11 +153,21 @@ const RegisterForm: React.FC = () => {
         // Redirect to home page
         navigate("/dashboard");
       } catch (error) {
-        // Handle errors from registration or login
-        if (error instanceof Error) {
-          console.error("Error during registration or login:", error.message);
+        // Check if the error has a string message (from thunkAPI.rejectWithValue)
+        if (typeof error === "string") {
+          if (error.includes("There is already")) {
+            // Error from backend: User already exists
+            setBackendErrors("There is already an account with this email");
+          } else {
+            // Generic error message
+            setBackendErrors("An error occurred. Please try again.");
+          }
+        } else if (error instanceof Error) {
+          // Handle errors as instances of Error (just in case)
+          setBackendErrors(error.message || "An unknown error occurred.");
         } else {
           console.error("Unknown error:", error);
+          setBackendErrors("An unknown error occurred.");
         }
       }
     }
@@ -167,6 +179,17 @@ const RegisterForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div className="mt-4 pb-6 flex flex-col mx-12">
           <h3 className="text-xl font-bold">Register</h3>
+
+          {backendErrors && (
+            <div
+              className="fixed top-2 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4 border border-black text-black text-sm rounded-md flex items-center"
+              style={{ zIndex: 1000 }}
+            >
+              <FiAlertTriangle className="mr-2 text-yellow-500" size={20} />
+              {backendErrors}
+            </div>
+          )}
+
           <div className="mt-4">
             <label htmlFor="email" className="block text-sm">
               Email:
