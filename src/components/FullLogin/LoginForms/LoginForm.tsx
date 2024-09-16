@@ -77,7 +77,7 @@ const [showPassword, setShowPassword] = useState<boolean>(false)
         ).unwrap();
 
         localStorage.setItem("token", response.token);
-        localStorage.setItem("isLogged", String(true));
+        localStorage.setItem("isLoggedIn", String(true));
 
         navigate("/dashboard");
       } catch (error) {
