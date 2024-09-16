@@ -8,7 +8,12 @@ function App() {
     <div className="bg-main">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={
+              localStorage.getItem("isLoggedIn") === "true"?
+                (<Navigate to="/dashboard" />):
+                  (<Navigate to="/login" />)
+
+          } />
           <Route path="/login" element={<LoginPageView />} />
           <Route path="/dashboard" element={<DashboardPageView />} />
         </Routes>

@@ -146,6 +146,7 @@ const RegisterForm: React.FC = () => {
 
         // Store JWT token in localStorage
         localStorage.setItem("token", resultAction.token);
+        localStorage.setItem("isLogged", String(true));
 
         // Redirect to home page
         navigate("/dashboard");
