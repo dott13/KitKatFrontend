@@ -68,13 +68,20 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
         localStorage.setItem("isLoggedIn", String(true));
         navigate("/dashboard");
       } catch (error) {
-        if (typeof error === "string" && error.includes("User not found")) {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            email: ["User with this email not found."],
-          }));
-        } else {
-          console.error("Error during login:", error);
+        if (typeof error === "string") {
+          if (error.includes("User not found")) {
+            setFormErrors((prevErrors) => ({
+              ...prevErrors,
+              email: ["User with this email not found."],
+            }));
+          } else if (error.includes("Incorrect password")) {
+            setFormErrors((prevErrors) => ({
+              ...prevErrors,
+              password: ["Incorrect password. Try again."],
+            }));
+          } else {
+            console.error("Error during login:", error);
+          }
         }
       }
     }

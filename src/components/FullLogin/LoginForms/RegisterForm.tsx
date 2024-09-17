@@ -28,7 +28,7 @@ const validatePassword = (password: string): string[] => {
     { regex: /[A-Z]/, message: "Include upper-case letter(s) [A-Z]" },
     { regex: /[0-9]/, message: "Include numbers [0-9]" },
     {
-      regex: /[!@#$%^&*()_+{}[\]:;"'<>,.?/~|\\-]/,
+      regex: /[!@#$%^&*()_+[\]:;.?/~\\-]/,
       message: "Include symbols [!@#$%^&*()...]",
     },
     { regex: /.{8,}/, message: "Make it at least 8 characters long." },
@@ -241,6 +241,7 @@ const RegisterForm: React.FC = () => {
                 type={showPassword ? "text" : "password"}
                 name="password"
                 id="password"
+                maxLength={20}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
@@ -279,6 +280,7 @@ const RegisterForm: React.FC = () => {
                 type="password"
                 name="confirmPassword"
                 id="confirmPassword"
+                maxLength={20}
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm Password"
