@@ -13,7 +13,7 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  toggleForm: () => void;
+  toggleForm: (toggleType:string) => void;
 }
 
 interface RegisterFormErrors {
@@ -29,6 +29,7 @@ const validatePassword = (password: string): string[] => {
   const validSymbols = /[!@#$%^&*()_+[\]/~\\-]/;
 
   // Regex to detect forbidden symbols (anything that is not a-z, A-Z, 0-9, or allowed symbols)
+  // eslint-disable-next-line no-useless-escape
   const forbiddenSymbols = /[^a-zA-Z0-9!@#$%^&*()_+\[\]\/~\\-]/;
 
   // Password policy rules
@@ -137,12 +138,12 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
     return Object.keys(finalErrors).length === 0;
   };
 
-  //Function for submiting and POSTing the data to the backend
+  //Function for submitting and POSTing the data to the backend
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
-      //this part is for dispatching or fetching the backend api request for registring
+      //this part is for dispatching or fetching the backend api request for registering
       //registerUser is made in our userSlice that is parsed to the redux store
       try {
         // Dispatch registration action
@@ -198,7 +199,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
     return errors.join(", ");
   };
 
-  //Function to make the password errors as an unorganized list so we can see them more clearly
+  //Function to make the password errors as an unorganized list, so we can see them more clearly
   //and without it being so chaotic
   const getPasswordErrorTooltipContent = () => {
     return (
@@ -335,7 +336,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
             <p className="text-xs text-center">Already Have an Account?</p>
             <a
               className="text-xs text-center font-semibold hover:underline hover:cursor-pointer pl-1"
-              onClick={toggleForm}
+              onClick={() => toggleForm("login")}
             >
               Login
             </a>

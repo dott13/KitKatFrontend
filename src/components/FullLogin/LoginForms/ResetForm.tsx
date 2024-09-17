@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import OutlookIcon from "../../../assets/svgs/SvgExporter.tsx";
 import { FiAlertTriangle } from "react-icons/fi";
 import { Tooltip } from "antd";
 import { resetPasswordUser} from "../../../redux/userSlice/userSlice.tsx";
@@ -9,7 +7,7 @@ import { useDispatch } from "react-redux";
 
 interface ResetFormData {
     email: string;
-    toggleForm: () => void;
+    toggleForm: (type:string) => void;
 }
 
 const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
@@ -84,7 +82,7 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
             <h2 className="text-xl font-bold pt-6 text-center">Your Logo</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mt-4 pb-6 flex flex-col mx-12">
-                    <h3 className="text-xl font-bold">Log in</h3>
+                    <h3 className="text-xl font-bold">Reset Password</h3>
 
                     <div className="mt-4">
                         <label htmlFor="email" className="block text-sm">
@@ -106,7 +104,7 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
                                 <Tooltip
                                     title={formErrors.email[0]}
                                     placement="top"
-                                    overlayClassName="custom-tooltip" //Class for changing the style of antds tooltips
+                                    overlayClassName="custom-tooltip" //Class for changing the style of antd tooltips
                                 >
                                     <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
                                 </Tooltip>
@@ -114,36 +112,22 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
                         </div>
                     </div>
 
-
-                    <a className="mt-4 hover:underline inline-block text-sm hover:cursor-pointer">
-                        Forgot Password?
-                    </a>
-
                     <button
                         type="submit"
                         className="bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded"
                     >
-                        Log in
+                        Reset
                     </button>
 
-                    <p className="text-[13px] my-6 text-center">or continue with</p>
-                    <div className="flex justify-center items-center">
-                        <button className="bg-button w-36 py-3 mr-3 rounded">
-                            <FcGoogle className="m-auto" size={24} />
-                        </button>
-                        <button className="bg-button w-36 py-3 ml-3 rounded">
-                            <OutlookIcon className="m-auto" />
-                        </button>
-                    </div>
-                    <p className="my-6 text-xs">
-                        Don't have an account yet?
-                        <a
-                            className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
-                            onClick={toggleForm}
-                        >
-                            Register here
-                        </a>
-                    </p>
+                    <p className={"my-6  text-xs"}>
+                    Take me
+                    <a
+                        className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
+                        onClick={() => toggleForm("reset")}
+                    >  Back
+                    </a>
+                </p>
+
                 </div>
             </form>
         </div>
