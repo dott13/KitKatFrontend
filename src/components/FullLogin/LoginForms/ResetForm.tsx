@@ -4,6 +4,8 @@ import { Tooltip } from "antd";
 import { resetPasswordUser} from "../../../redux/userSlice/userSlice.tsx";
 import { AppDispatch } from "../../../redux/store/configureStore";
 import { useDispatch } from "react-redux";
+import "./login-button.css"
+
 
 interface ResetFormData {
     email: string;
@@ -114,7 +116,7 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
 
                     <button
                         type="submit"
-                        className="bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded"
+                        className="login-animated-button bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded"
                     >
                         Reset
                     </button>

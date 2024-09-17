@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { registerUser, loginUser } from "../../../redux/userSlice/userSlice"; // Import the actions
 import { AppDispatch } from "../../../redux/store/configureStore";
 import { FiAlertTriangle } from "react-icons/fi";
+import "./login-button.css"
+
 
 interface RegisterFormData {
   email: string;
