@@ -29,7 +29,7 @@ export const loginUser = createAsyncThunk<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
-      error.response?.data?.error || "Login Failed"
+      error.response?.data?.message || "Login Failed"
     );
   }
 });
