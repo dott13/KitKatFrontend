@@ -13,6 +13,7 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
+  toggleForm: () => void;
 }
 
 interface RegisterFormErrors {
@@ -23,28 +24,41 @@ interface RegisterFormErrors {
 //Function to validate the password by policy made in jira ticket
 const validatePassword = (password: string): string[] => {
   const errors: string[] = [];
+
+  // Allowed symbols
+  const validSymbols = /[!@#$%^&*()_+[\]/~\\-]/;
+
+  // Regex to detect forbidden symbols (anything that is not a-z, A-Z, 0-9, or allowed symbols)
+  const forbiddenSymbols = /[^a-zA-Z0-9!@#$%^&*()_+\[\]\/~\\-]/;
+
+  // Password policy rules
   const passwordPolicy = [
     { regex: /[a-z]/, message: "Include lower-case letter(s) [a-z]" },
     { regex: /[A-Z]/, message: "Include upper-case letter(s) [A-Z]" },
     { regex: /[0-9]/, message: "Include numbers [0-9]" },
-    {
-      regex: /[!@#$%^&*()_+{}[\]:;"'<>,.?/~|\\-]/,
-      message: "Include symbols [!@#$%^&*()...]",
-    },
+    { regex: validSymbols, message: "Include symbols [!@#$%^&*()...]" },
     { regex: /.{8,}/, message: "Make it at least 8 characters long." },
   ];
 
+  // Check for missing required criteria
   passwordPolicy.forEach((rule) => {
     if (!rule.regex.test(password)) {
       errors.push(rule.message);
     }
   });
 
+  // Check for forbidden symbols
+  if (forbiddenSymbols.test(password)) {
+    errors.push(
+      "Your password contains forbidden symbols. Only the following symbols are allowed: !@#$%^&*()_+[]/~\\-"
+    );
+  }
+
   return errors;
 };
 
-const RegisterForm: React.FC = () => {
-  const [formData, setFormData] = useState<RegisterFormData>({
+const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
+  const [formData, setFormData] = useState<Partial<RegisterFormData>>({
     email: "",
     password: "",
     confirmPassword: "",
@@ -134,16 +148,16 @@ const RegisterForm: React.FC = () => {
         // Dispatch registration action
         await dispatch(
           registerUser({
-            email: formData.email,
-            password: formData.password,
+            email: formData.email as string,
+            password: formData.password as string,
           })
         ).unwrap();
 
         // Dispatch login action after successful registration
         const resultAction = await dispatch(
           loginUser({
-            email: formData.email,
-            password: formData.password,
+            email: formData.email as string,
+            password: formData.password as string,
           })
         ).unwrap();
 
@@ -241,6 +255,7 @@ const RegisterForm: React.FC = () => {
                 type={showPassword ? "text" : "password"}
                 name="password"
                 id="password"
+                maxLength={20}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
@@ -279,6 +294,7 @@ const RegisterForm: React.FC = () => {
                 type="password"
                 name="confirmPassword"
                 id="confirmPassword"
+                maxLength={20}
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm Password"
@@ -314,6 +330,15 @@ const RegisterForm: React.FC = () => {
             <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
               <OutlookIcon className="m-auto" />
             </button>
+          </div>
+          <div className="flex m-auto">
+            <p className="text-xs text-center">Already Have an Account?</p>
+            <a
+              className="text-xs text-center font-semibold hover:underline hover:cursor-pointer pl-1"
+              onClick={toggleForm}
+            >
+              Login
+            </a>
           </div>
         </div>
       </form>
