@@ -302,16 +302,16 @@ const RegisterForm: React.FC = () => {
 
           <button
             type="submit"
-            className="bg-button text-black text-center mt-8 w-full py-4 font-bold text-base rounded"
+            className="login-animated-button bg-button text-black text-center mt-8 w-full py-4 font-bold text-base rounded"
           >
             Register
           </button>
           <p className="text-[13px] my-6 text-center">or continue with</p>
           <div className="flex justify-center items-center mb-6">
-            <button className="bg-button w-36 py-3 mr-3 rounded">
+            <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded">
               <FcGoogle className="m-auto" size={24} />
             </button>
-            <button className="bg-button w-36 py-3 ml-3 rounded">
+            <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
               <OutlookIcon className="m-auto" />
             </button>
           </div>
