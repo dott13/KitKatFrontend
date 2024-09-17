@@ -24,22 +24,35 @@ interface RegisterFormErrors {
 //Function to validate the password by policy made in jira ticket
 const validatePassword = (password: string): string[] => {
   const errors: string[] = [];
+
+  // Allowed symbols
+  const validSymbols = /[!@#$%^&*()_+[\]/~\\-]/;
+
+  // Regex to detect forbidden symbols (anything that is not a-z, A-Z, 0-9, or allowed symbols)
+  const forbiddenSymbols = /[^a-zA-Z0-9!@#$%^&*()_+\[\]\/~\\-]/;
+
+  // Password policy rules
   const passwordPolicy = [
     { regex: /[a-z]/, message: "Include lower-case letter(s) [a-z]" },
     { regex: /[A-Z]/, message: "Include upper-case letter(s) [A-Z]" },
     { regex: /[0-9]/, message: "Include numbers [0-9]" },
-    {
-      regex: /[!@#$%^&*()_+[\]:;.?/~\\-]/,
-      message: "Include symbols [!@#$%^&*()...]",
-    },
+    { regex: validSymbols, message: "Include symbols [!@#$%^&*()...]" },
     { regex: /.{8,}/, message: "Make it at least 8 characters long." },
   ];
 
+  // Check for missing required criteria
   passwordPolicy.forEach((rule) => {
     if (!rule.regex.test(password)) {
       errors.push(rule.message);
     }
   });
+
+  // Check for forbidden symbols
+  if (forbiddenSymbols.test(password)) {
+    errors.push(
+      "Your password contains forbidden symbols. Only the following symbols are allowed: !@#$%^&*()_+[]/~\\-"
+    );
+  }
 
   return errors;
 };
