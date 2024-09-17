@@ -13,6 +13,7 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
+  toggleForm: () => void;
 }
 
 interface RegisterFormErrors {
@@ -43,8 +44,8 @@ const validatePassword = (password: string): string[] => {
   return errors;
 };
 
-const RegisterForm: React.FC = () => {
-  const [formData, setFormData] = useState<RegisterFormData>({
+const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
+  const [formData, setFormData] = useState<Partial<RegisterFormData>>({
     email: "",
     password: "",
     confirmPassword: "",
@@ -134,16 +135,16 @@ const RegisterForm: React.FC = () => {
         // Dispatch registration action
         await dispatch(
           registerUser({
-            email: formData.email,
-            password: formData.password,
+            email: formData.email as string,
+            password: formData.password as string,
           })
         ).unwrap();
 
         // Dispatch login action after successful registration
         const resultAction = await dispatch(
           loginUser({
-            email: formData.email,
-            password: formData.password,
+            email: formData.email as string,
+            password: formData.password as string,
           })
         ).unwrap();
 
@@ -316,6 +317,15 @@ const RegisterForm: React.FC = () => {
             <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
               <OutlookIcon className="m-auto" />
             </button>
+          </div>
+          <div className="flex m-auto">
+            <p className="text-xs text-center">Already Have an Account?</p>
+            <a
+              className="text-xs text-center font-semibold hover:underline hover:cursor-pointer pl-1"
+              onClick={toggleForm}
+            >
+              Login
+            </a>
           </div>
         </div>
       </form>
