@@ -134,6 +134,7 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
                 name="password"
                 id="password"
                 value={formData.password}
+                maxLength={20}
                 onChange={handleChange}
                 placeholder="Password"
                 className={`w-full pl-10 pr-3 py-1 mt-2 text-sm text-black border ${

@@ -140,12 +140,12 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
     return Object.keys(finalErrors).length === 0;
   };
 
-  //Function for submitting and POSTing the data to the backend
+  //Function for submiting and POSTing the data to the backend
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
-      //this part is for dispatching or fetching the backend api request for registering
+      //this part is for dispatching or fetching the backend api request for registring
       //registerUser is made in our userSlice that is parsed to the redux store
       try {
         // Dispatch registration action
@@ -201,7 +201,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
     return errors.join(", ");
   };
 
-  //Function to make the password errors as an unorganized list, so we can see them more clearly
+  //Function to make the password errors as an unorganized list so we can see them more clearly
   //and without it being so chaotic
   const getPasswordErrorTooltipContent = () => {
     return (
