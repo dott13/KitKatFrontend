@@ -14,7 +14,7 @@ import "./login-button.css"
 interface LoginFormData {
   email: string;
   password: string;
-  toggleForm: (toggleType:string) => void;
+  toggleForm: (toggleType:"login"|"register"|"reset"|"redirect") => void;
 }
 
 const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
@@ -186,7 +186,7 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
             Don't have an account yet?
             <a
               className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
-                  onClick={() => toggleForm("login")}
+                  onClick={() => toggleForm("register")}
               >  Register here
             </a>
           </p>

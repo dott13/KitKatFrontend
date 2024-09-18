@@ -54,7 +54,7 @@ export const registerUser = createAsyncThunk<
 export const resetPasswordUser = createAsyncThunk<
     {message:string},// Return type
     {email:string},// Argument type
-    { rejectValue: string } // Reject type
+    {rejectValue: string } // Reject type
 >("user/reset-password", async (userInfo,  thunkAPI) =>{
   try {
     const response = await axios.post("/user/reset-password", userInfo);

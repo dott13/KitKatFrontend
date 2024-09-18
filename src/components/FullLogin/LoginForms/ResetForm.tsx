@@ -9,10 +9,11 @@ import "./login-button.css"
 
 interface ResetFormData {
     email: string;
-    toggleForm: (type:string) => void;
+    toggleForm: (type:"login"|"register"|"reset"|"redirect") => void;
+    setMessage: (message:string) => void;
 }
 
-const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
+const ResetForm: React.FC<ResetFormData> = ({ toggleForm, setMessage }) => {
     const [formData, setFormData] = useState<Partial<ResetFormData>>({
         email: "",
     });
@@ -47,11 +48,16 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
 
         if (validateForm()) {
             try {
+                toggleForm("redirect");
+
+                console.log("before calling the api")
+
                 await dispatch(
                     resetPasswordUser({
                         email: formData.email as string,
                     })
                 ).unwrap();
+                console.log("after calling the api")
 
             } catch (error) {
                 if (typeof error === "string") {
@@ -59,7 +65,7 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
                     if(error.includes("User not found")){
                         setFormErrors((prevErrors) => ({
                             ...prevErrors,
-                            email: ["User with this email not found."],
+                            email: ["User with this email not found"],
                         }));
                     }else if ( error.includes("An error occurred during sending email")){
                         setFormErrors((prevErrors) => ({
@@ -69,11 +75,9 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
                     }
 
                 }else if (error instanceof Error) {
-                    setFormErrors((prevErrors) => ({
-                        ...prevErrors,
-                        email: ["An unknown error occurred."],
-                    }));
-                    console.error(error.message || "An unknown error occurred.");
+                    console.error(error.message || "An unknown error occurred");
+                    setMessage("An unknown error occurred");
+                    toggleForm("redirect");
                 }
             }
         }
@@ -125,7 +129,7 @@ const ResetForm: React.FC<ResetFormData> = ({ toggleForm }) => {
                     Take me
                     <a
                         className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
-                        onClick={() => toggleForm("reset")}
+                        onClick={() => toggleForm("login")}
                     >  Back
                     </a>
                 </p>

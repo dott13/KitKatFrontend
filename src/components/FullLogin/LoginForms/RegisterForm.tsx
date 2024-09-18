@@ -15,7 +15,7 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  toggleForm: (toggleType:string) => void;
+  toggleForm: (toggleType:"login"|"register"|"reset"|"redirect") => void;
 }
 
 interface RegisterFormErrors {
