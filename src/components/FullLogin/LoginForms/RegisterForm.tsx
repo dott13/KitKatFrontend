@@ -8,12 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { registerUser, loginUser } from "../../../redux/userSlice/userSlice"; // Import the actions
 import { AppDispatch } from "../../../redux/store/configureStore";
 import { FiAlertTriangle } from "react-icons/fi";
+import "./login-button.css"
+
 
 interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  toggleForm: () => void;
+  toggleForm: (toggleType:"login"|"register"|"reset"|"redirect") => void;
 }
 
 interface RegisterFormErrors {
@@ -29,6 +31,7 @@ const validatePassword = (password: string): string[] => {
   const validSymbols = /[!@#$%^&*()_+[\]/~\\-]/;
 
   // Regex to detect forbidden symbols (anything that is not a-z, A-Z, 0-9, or allowed symbols)
+  // eslint-disable-next-line no-useless-escape
   const forbiddenSymbols = /[^a-zA-Z0-9!@#$%^&*()_+\[\]\/~\\-]/;
 
   // Password policy rules
@@ -335,7 +338,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
             <p className="text-xs text-center">Already Have an Account?</p>
             <a
               className="text-xs text-center font-semibold hover:underline hover:cursor-pointer pl-1"
-              onClick={toggleForm}
+              onClick={() => toggleForm("login")}
             >
               Login
             </a>

@@ -11,12 +11,10 @@ import { useNavigate } from "react-router-dom";
 import "./login-button.css"
 
 
-
-
 interface LoginFormData {
   email: string;
   password: string;
-  toggleForm: () => void;
+  toggleForm: (toggleType:"login"|"register"|"reset"|"redirect") => void;
 }
 
 const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
@@ -136,6 +134,7 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
                 name="password"
                 id="password"
                 value={formData.password}
+                maxLength={20}
                 onChange={handleChange}
                 placeholder="Password"
                 className={`w-full pl-10 pr-3 py-1 mt-2 text-sm text-black border ${
@@ -164,38 +163,38 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
             </div>
           </div>
 
-          <a className="mt-4 hover:underline inline-block text-sm hover:cursor-pointer">
+          <a className="mt-4 hover:underline inline-block text-sm hover:cursor-pointer" onClick={() => toggleForm("reset")}>
             Forgot Password?
           </a>
 
-            <button
-                type="submit"
-                className="login-animated-button bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded "
-            >
-              Log in
-            </button>
+          <button
+            type="submit"
+            className="login-animated-button bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded "
+          >
+            Log in
+          </button>
 
-            <p className="text-[13px] my-6 text-center">or continue with</p>
-            <div className=" flex justify-center items-center ">
+          <p className="text-[13px] my-6 text-center">or continue with</p>
+          <div className="flex justify-center items-center">
               <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded">
-                <FcGoogle className="m-auto" size={24}/>
-              </button>
+              <FcGoogle className="m-auto" size={24} />
+            </button>
               <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
-                <OutlookIcon className="m-auto"/>
-              </button>
-            </div>
-            <p className={"my-6  text-xs"}>
-              Don't have an account yet?
-              <a
-                  className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
-                 onClick={toggleForm}
-              >  Register here
-              </a>
-            </p>
+              <OutlookIcon className="m-auto" />
+            </button>
           </div>
-        </form>
-      </div>
-  )
+          <p className="my-6 text-xs">
+            Don't have an account yet?
+            <a
+              className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
+                  onClick={() => toggleForm("register")}
+              >  Register here
+            </a>
+          </p>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default LoginForm;

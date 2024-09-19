@@ -7,7 +7,7 @@ interface UserState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
-//Initial state for the slice for future all null so it reinitializez when called
+//Initial state for the slice for future all null so it reinitialize when called
 const initialState: UserState = {
   user: null,
   token: null, // Initialize token
@@ -26,6 +26,7 @@ export const loginUser = createAsyncThunk<
     const response = await axios.post("/api/login", credentials);
     const { user, token } = response.data; // Extract user and token
     return { user, token }; // Return both user data and token
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Login Failed"
@@ -42,12 +43,29 @@ export const registerUser = createAsyncThunk<
   try {
     const response = await axios.post("/api/register", userInfo);
     return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Registration failed"
     );
   }
 });
+
+export const resetPasswordUser = createAsyncThunk<
+    {message:string},// Return type
+    {email:string},// Argument type
+    {rejectValue: string } // Reject type
+>("user/reset-password", async (userInfo,  thunkAPI) =>{
+  try {
+    const response = await axios.post("/user/reset-password", userInfo);
+    return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Reset Password failed"
+    );
+  }
+})
 
 //Slice for adding to the redux store also name for using in Selectors later
 //We have reducers for every state of the slice loading rejected or approved so the data is flowing correctly
@@ -103,7 +121,21 @@ const userSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string; // Ensure correct type
-      });
+      })
+      .addCase(
+        resetPasswordUser.fulfilled,
+        (state) => {
+          state.status = "succeeded";
+          state.error = null;
+        }
+      )
+      .addCase(
+          resetPasswordUser.rejected,
+          (state, action) => {
+            state.status="failed";
+            state.error=action.payload as string;
+          }
+      )
   },
 });
 
