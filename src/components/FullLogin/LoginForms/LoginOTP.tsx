@@ -128,7 +128,7 @@ const LoginOTPForm: React.FC<LoginOTPFormData> = ({email, toggleForm}) => {
             verificationCode: formData.otpCode as string ,
           })
         ).unwrap();
-        localStorage.setItem("token", response.token);
+        localStorage.setItem("token", response.jwt);
         localStorage.setItem("isLoggedIn", String(true));
         navigate("/dashboard");
 

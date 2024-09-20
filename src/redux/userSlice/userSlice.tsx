@@ -35,14 +35,14 @@ export const loginUser = createAsyncThunk<
 });
 
 export const loginOTPUser = createAsyncThunk<
-    { user: { id: string; email: string }; token: string }, // Return type including token
+    { user: { id: string; email: string }; jwt: string }, // Return type including token
     { email: string; verificationCode: string }, // Argument type
     { rejectValue: string } // Reject type
 >("user/loginOTPUser", async (credentials, thunkAPI) => {
   try {
     const response = await axios.post("/api/login-otp", credentials);
-    const { user, token } = response.data; // Extract user and token
-    return { user, token }; // Return both user data and token
+    const { user, jwt } = response.data; // Extract user and token
+    return { user, jwt }; // Return both user data and token
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
@@ -129,15 +129,15 @@ const userSlice = createSlice({
           state,
           action: PayloadAction<{
             user: { id: string; email: string };
-            token: string;
+            jwt: string;
           }>
         ) => {
           state.status = "succeeded";
           state.user = action.payload.user;
-          state.token = action.payload.token; // Store token
+          state.token = action.payload.jwt; // Store token
           state.error = null;
 
-          localStorage.setItem("token", action.payload.token);
+          localStorage.setItem("token", action.payload.jwt);
       })
       .addCase(loginOTPUser.rejected, (state, action) => {
         state.status = "failed";
