@@ -18,14 +18,14 @@ const initialState: UserState = {
 // Define the async thunks with correct return and reject types
 //Login Thunk
 export const loginUser = createAsyncThunk<
-  { user: { id: string; email: string }; token: string }, // Return type including token
+  { message: string }, // Return type including token
   { email: string; password: string }, // Argument type
   { rejectValue: string } // Reject type
 >("user/loginUser", async (credentials, thunkAPI) => {
   try {
     const response = await axios.post("/api/login", credentials);
-    const { user, token } = response.data; // Extract user and token
-    return { user, token }; // Return both user data and token
+    const { message} = response.data;
+    return { message };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
@@ -33,6 +33,25 @@ export const loginUser = createAsyncThunk<
     );
   }
 });
+
+export const loginOTPUser = createAsyncThunk<
+    { user: { id: string; email: string }; token: string }, // Return type including token
+    { email: string; verificationCode: string }, // Argument type
+    { rejectValue: string } // Reject type
+>("user/loginOTPUser", async (credentials, thunkAPI) => {
+  try {
+    const response = await axios.post("/api/login-otp", credentials);
+    const { user, token } = response.data; // Extract user and token
+    return { user, token }; // Return both user data and token
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "LoginOTP Failed"
+    );
+  }
+});
+
+
 
 //Register Thunk
 export const registerUser = createAsyncThunk<
@@ -82,11 +101,30 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+//login---------------------------------------------------------------------------------------------------------
       .addCase(loginUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(
-        loginUser.fulfilled,
+      .addCase(loginUser.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            message:string
+          }>
+        ) => {
+          state.status = "succeeded";
+          state.token = action.payload.message;
+          state.error = null;
+         })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string; // Ensure correct type
+      })
+//login-otp---------------------------------------------------------------------------------------------------------
+      .addCase(loginOTPUser.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(loginOTPUser.fulfilled,
         (
           state,
           action: PayloadAction<{
@@ -99,19 +137,18 @@ const userSlice = createSlice({
           state.token = action.payload.token; // Store token
           state.error = null;
 
-          // Optionally, store the token in localStorage
           localStorage.setItem("token", action.payload.token);
-        }
-      )
-      .addCase(loginUser.rejected, (state, action) => {
+      })
+      .addCase(loginOTPUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string; // Ensure correct type
       })
+
+//register---------------------------------------------------------------------------------------------------------
       .addCase(registerUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(
-        registerUser.fulfilled,
+      .addCase(registerUser.fulfilled,
         (state, action: PayloadAction<{ id: string; email: string }>) => {
           state.status = "succeeded";
           state.user = action.payload;
@@ -122,20 +159,18 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string; // Ensure correct type
       })
-      .addCase(
-        resetPasswordUser.fulfilled,
+//reset---------------------------------------------------------------------------------------------------------
+        .addCase(resetPasswordUser.fulfilled,
         (state) => {
           state.status = "succeeded";
           state.error = null;
         }
       )
-      .addCase(
-          resetPasswordUser.rejected,
-          (state, action) => {
-            state.status="failed";
-            state.error=action.payload as string;
-          }
-      )
+      .addCase(resetPasswordUser.rejected,
+        (state, action) => {
+          state.status="failed";
+          state.error=action.payload as string;
+        })
   },
 });
 

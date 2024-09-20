@@ -1,23 +1,22 @@
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import React, {useState} from "react";
+import {FcGoogle} from "react-icons/fc";
 import OutlookIcon from "../../../assets/svgs/SvgExporter.tsx";
-import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
-import { FiAlertTriangle } from "react-icons/fi";
-import { Tooltip } from "antd"; // Import Ant Design Tooltip
-import { loginUser } from "../../../redux/userSlice/userSlice.tsx";
-import { AppDispatch } from "../../../redux/store/configureStore";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {FaRegEyeSlash, FaRegEye} from "react-icons/fa";
+import {FiAlertTriangle} from "react-icons/fi";
+import {Tooltip} from "antd"; // Import Ant Design Tooltip
+import {loginUser} from "../../../redux/userSlice/userSlice.tsx";
+import {AppDispatch} from "../../../redux/store/configureStore";
+import {useDispatch} from "react-redux";
 import "./login-button.css"
 
 
 interface LoginFormData {
   email: string;
   password: string;
-  toggleForm: (toggleType:"login"|"register"|"reset"|"redirect") => void;
+  toggleForm: (toggleType: "login" | "register" | "reset" | "redirect" | "otp") => void;
 }
 
-const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
+const LoginForm: React.FC<LoginFormData> = ({toggleForm}) => {
   const [formData, setFormData] = useState<Partial<LoginFormData>>({
     email: "",
     password: "",
@@ -29,10 +28,9 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
   >({});
 
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate(); // Hook for navigation
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setFormData({
       ...formData,
       [name]: value,
@@ -59,16 +57,15 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
 
     if (validateForm()) {
       try {
-        const response = await dispatch(
+        await dispatch(
           loginUser({
             email: formData.email as string,
             password: formData.password as string,
           })
         ).unwrap();
 
-        localStorage.setItem("token", response.token);
-        localStorage.setItem("isLoggedIn", String(true));
-        navigate("/dashboard");
+        toggleForm("otp")
+
       } catch (error) {
         if (typeof error === "string") {
           if (error.includes("User not found")) {
@@ -118,7 +115,7 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
                   placement="top"
                   overlayClassName="custom-tooltip" //Class for changing the style of antds tooltips
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]"/>
                 </Tooltip>
               )}
             </div>
@@ -147,7 +144,7 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
                   placement="top"
                   overlayClassName="custom-tooltip"
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items" />
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items"/>
                 </Tooltip>
               )}
               <div
@@ -155,15 +152,16 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
                 className="absolute right-3 cursor-pointer top-[40%]"
               >
                 {showPassword ? (
-                  <FaRegEyeSlash className="text-gray-500" />
+                  <FaRegEyeSlash className="text-gray-500"/>
                 ) : (
-                  <FaRegEye className="text-gray-500" />
+                  <FaRegEye className="text-gray-500"/>
                 )}
               </div>
             </div>
           </div>
 
-          <a className="mt-4 hover:underline inline-block text-sm hover:cursor-pointer" onClick={() => toggleForm("reset")}>
+          <a className="mt-4 hover:underline inline-block text-sm hover:cursor-pointer"
+             onClick={() => toggleForm("reset")}>
             Forgot Password?
           </a>
 
@@ -176,19 +174,19 @@ const LoginForm: React.FC<LoginFormData> = ({ toggleForm }) => {
 
           <p className="text-[13px] my-6 text-center">or continue with</p>
           <div className="flex justify-center items-center">
-              <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded">
-              <FcGoogle className="m-auto" size={24} />
+            <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded">
+              <FcGoogle className="m-auto" size={24}/>
             </button>
-              <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
-              <OutlookIcon className="m-auto" />
+            <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
+              <OutlookIcon className="m-auto"/>
             </button>
           </div>
           <p className="my-6 text-xs">
             Don't have an account yet?
             <a
               className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
-                  onClick={() => toggleForm("register")}
-              >  Register here
+              onClick={() => toggleForm("register")}
+            > Register here
             </a>
           </p>
         </div>

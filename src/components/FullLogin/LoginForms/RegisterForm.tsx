@@ -1,13 +1,12 @@
-import { Tooltip } from "antd";
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import {Tooltip} from "antd";
+import React, {useState} from "react";
+import {FcGoogle} from "react-icons/fc";
 import OutlookIcon from "../../../assets/svgs/SvgExporter";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { registerUser, loginUser } from "../../../redux/userSlice/userSlice"; // Import the actions
-import { AppDispatch } from "../../../redux/store/configureStore";
-import { FiAlertTriangle } from "react-icons/fi";
+import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
+import {useDispatch} from "react-redux";
+import {registerUser, loginUser} from "../../../redux/userSlice/userSlice"; // Import the actions
+import {AppDispatch} from "../../../redux/store/configureStore";
+import {FiAlertTriangle} from "react-icons/fi";
 import "./login-button.css"
 
 
@@ -15,7 +14,7 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  toggleForm: (toggleType:"login"|"register"|"reset"|"redirect") => void;
+  toggleForm: (toggleType: "login" | "register" | "reset" | "redirect" | "otp") => void;
 }
 
 interface RegisterFormErrors {
@@ -23,6 +22,7 @@ interface RegisterFormErrors {
   password?: string[];
   confirmPassword?: string[];
 }
+
 //Function to validate the password by policy made in jira ticket
 const validatePassword = (password: string): string[] => {
   const errors: string[] = [];
@@ -36,11 +36,11 @@ const validatePassword = (password: string): string[] => {
 
   // Password policy rules
   const passwordPolicy = [
-    { regex: /[a-z]/, message: "Include lower-case letter(s) [a-z]" },
-    { regex: /[A-Z]/, message: "Include upper-case letter(s) [A-Z]" },
-    { regex: /[0-9]/, message: "Include numbers [0-9]" },
-    { regex: validSymbols, message: "Include symbols [!@#$%^&*()...]" },
-    { regex: /.{8,}/, message: "Make it at least 8 characters long." },
+    {regex: /[a-z]/, message: "Include lower-case letter(s) [a-z]"},
+    {regex: /[A-Z]/, message: "Include upper-case letter(s) [A-Z]"},
+    {regex: /[0-9]/, message: "Include numbers [0-9]"},
+    {regex: validSymbols, message: "Include symbols [!@#$%^&*()...]"},
+    {regex: /.{8,}/, message: "Make it at least 8 characters long."},
   ];
 
   // Check for missing required criteria
@@ -60,7 +60,7 @@ const validatePassword = (password: string): string[] => {
   return errors;
 };
 
-const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
+const RegisterForm: React.FC<RegisterFormData> = ({toggleForm}) => {
   const [formData, setFormData] = useState<Partial<RegisterFormData>>({
     email: "",
     password: "",
@@ -73,10 +73,9 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
 
   //Dispatch Hook from redux to get information from our slices in the store
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate(); // Hook for navigation
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
     setFormData({
       ...formData,
@@ -157,19 +156,20 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
         ).unwrap();
 
         // Dispatch login action after successful registration
-        const resultAction = await dispatch(
-          loginUser({
-            email: formData.email as string,
-            password: formData.password as string,
-          })
-        ).unwrap();
+        try {
 
-        // Store JWT token in localStorage
-        localStorage.setItem("token", resultAction.token);
-        localStorage.setItem("isLoggedIn", String(true));
+          await dispatch(
+            loginUser({
+              email: formData.email as string,
+              password: formData.password as string,
+            })
+          ).unwrap();
+          toggleForm("otp");
 
-        // Redirect to home page
-        navigate("/dashboard");
+        } catch (error) {
+          console.error("Error during login:", error);
+          toggleForm("login")
+        }
       } catch (error) {
         // Check if the error has a string message (from thunkAPI.rejectWithValue)
         if (typeof error === "string") {
@@ -243,7 +243,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
                   placement="top"
                   overlayClassName="custom-tooltip" //Class for changing the style of antds tooltips
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]"/>
                 </Tooltip>
               )}
             </div>
@@ -272,7 +272,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
                   placement="top"
                   overlayClassName="custom-tooltip"
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items" />
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items"/>
                 </Tooltip>
               )}
               <div
@@ -280,9 +280,9 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
                 className="absolute right-3 cursor-pointer top-[40%]"
               >
                 {showPassword ? (
-                  <FaRegEyeSlash className="text-gray-500" />
+                  <FaRegEyeSlash className="text-gray-500"/>
                 ) : (
-                  <FaRegEye className="text-gray-500" />
+                  <FaRegEye className="text-gray-500"/>
                 )}
               </div>
             </div>
@@ -313,7 +313,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
                   placement="top"
                   overlayClassName="custom-tooltip"
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]"/>
                 </Tooltip>
               )}
             </div>
@@ -328,10 +328,10 @@ const RegisterForm: React.FC<RegisterFormData> = ({ toggleForm }) => {
           <p className="text-[13px] my-6 text-center">or continue with</p>
           <div className="flex justify-center items-center mb-6">
             <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded">
-              <FcGoogle className="m-auto" size={24} />
+              <FcGoogle className="m-auto" size={24}/>
             </button>
             <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
-              <OutlookIcon className="m-auto" />
+              <OutlookIcon className="m-auto"/>
             </button>
           </div>
           <div className="flex m-auto">
