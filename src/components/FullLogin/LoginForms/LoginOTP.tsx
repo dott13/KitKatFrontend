@@ -21,8 +21,10 @@ const LoginOTPForm: React.FC<LoginOTPFormData> = ({email, toggleForm}) => {
 
 
   const [formErrors, setFormErrors] = useState<
-    Partial<Record<keyof LoginOTPFormData, string[]>>
-  >({});
+    Partial<Record<keyof LoginOTPFormData, string>>
+  >({
+    otpCode: ""
+  });
 
 
   const dispatch = useDispatch<AppDispatch>();
@@ -136,20 +138,25 @@ const LoginOTPForm: React.FC<LoginOTPFormData> = ({email, toggleForm}) => {
 
       } catch (error) {
         if (typeof error === "string") {
-          if (error.includes("User not found")) {
+          if (error.includes("User login failed")) {
             setFormErrors((prevErrors) => ({
               ...prevErrors,
-              otpCode: ["User not found"],
+              otpCode: "User login failed",
             }));
           } else if (error.includes("Incorrect password")) {
             setFormErrors((prevErrors) => ({
               ...prevErrors,
-              otpCode: ["Incorrect password. Try again."],
+              otpCode: "Incorrect password. Try again.",
             }));
           } else {
+            setFormErrors((prevErrors) => ({
+              ...prevErrors,
+              otpCode: "Error during login, try again",
+            }));
             console.error("Error during login:", error);
           }
         }
+
       }finally {
         setIsLoading(false);
       }
@@ -170,7 +177,7 @@ const LoginOTPForm: React.FC<LoginOTPFormData> = ({email, toggleForm}) => {
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <input
               id={`otp-input-${index}`}
-              className={`text-2xl bg-white w-10 flex p-2 text-center text-black ${
+              className={`text-2xl bg-white w-10 flex p-2 text-center text-black border-[1px] ${
                 formErrors.otpCode ? "border-red-500" : "border-gray-300"
               } rounded `}
               key={index}
