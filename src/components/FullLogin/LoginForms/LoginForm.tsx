@@ -27,6 +27,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
   const [formErrors, setFormErrors] = useState<
     Partial<Record<keyof LoginFormData, string[]>>
   >({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -54,6 +55,8 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if (isLoading) return;
+    setIsLoading(true)
     e.preventDefault();
 
     if (validateForm()) {
@@ -83,6 +86,8 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
             console.error("Error during login:", error);
           }
         }
+      }finally {
+        setIsLoading(false);
       }
     }
   };
@@ -169,6 +174,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
           <button
             type="submit"
             className="login-animated-button bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded "
+            disabled={isLoading}
           >
             Log in
           </button>

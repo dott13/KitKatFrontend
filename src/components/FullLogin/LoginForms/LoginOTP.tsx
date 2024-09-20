@@ -210,6 +210,7 @@ const LoginOTPForm: React.FC<LoginOTPFormData> = ({email, toggleForm}) => {
               type="submit"
               className="mb-6 login-animated-button bg-button text-black text-center mt-6 w-full py-4 font-bold text-base rounded "
               onClick={handleSubmit}
+              disabled={isLoading}
             >
               Submit
             </button>

@@ -72,6 +72,8 @@ const RegisterForm: React.FC<RegisterFormData> = ({toggleForm, setEmail}) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<RegisterFormErrors>({});
   const [backendErrors, setBackendErrors] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   //Dispatch Hook from redux to get information from our slices in the store
   const dispatch = useDispatch<AppDispatch>();
@@ -143,6 +145,8 @@ const RegisterForm: React.FC<RegisterFormData> = ({toggleForm, setEmail}) => {
 
   //Function for submiting and POSTing the data to the backend
   const handleSubmit = async (e: React.FormEvent) => {
+    if (isLoading) return;
+    setIsLoading(true)
     e.preventDefault();
 
     if (validateForm()) {
@@ -176,10 +180,8 @@ const RegisterForm: React.FC<RegisterFormData> = ({toggleForm, setEmail}) => {
         // Check if the error has a string message (from thunkAPI.rejectWithValue)
         if (typeof error === "string") {
           if (error.includes("There is already")) {
-            // Error from backend: User already exists
             setBackendErrors("There is already an account with this email");
           } else {
-            // Generic error message
             setBackendErrors("An error occurred. Please try again.");
           }
         } else if (error instanceof Error) {
@@ -189,6 +191,8 @@ const RegisterForm: React.FC<RegisterFormData> = ({toggleForm, setEmail}) => {
           console.error("Unknown error:", error);
           setBackendErrors("An unknown error occurred.");
         }
+      }finally {
+        setIsLoading(false)
       }
     }
   };
@@ -324,6 +328,7 @@ const RegisterForm: React.FC<RegisterFormData> = ({toggleForm, setEmail}) => {
           <button
             type="submit"
             className="login-animated-button bg-button text-black text-center mt-8 w-full py-4 font-bold text-base rounded"
+            disabled={isLoading}
           >
             Register
           </button>
