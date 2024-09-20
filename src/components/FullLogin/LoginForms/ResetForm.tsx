@@ -5,6 +5,8 @@ import {resetPasswordUser} from "../../../redux/userSlice/userSlice.tsx";
 import {AppDispatch} from "../../../redux/store/configureStore";
 import {useDispatch} from "react-redux";
 import "./login-button.css"
+import logo from "../../../assets/svgs/logo-white.svg";
+
 
 
 interface ResetFormData {
@@ -85,7 +87,8 @@ const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
 
   return (
     <div className="w-96 m-auto bg-widget border-solid border-inherit border-[1px] rounded-[10px] mt-10">
-      <h2 className="text-xl font-bold pt-6 text-center">Your Logo</h2>
+
+      <img className="mt-4 w-50 h-20 m-auto" src={logo} alt="Logo"/>
       <form onSubmit={handleSubmit}>
         <div className="mt-4 pb-6 flex flex-col mx-12">
           <h3 className="text-xl font-bold">Reset Password</h3>

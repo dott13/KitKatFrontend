@@ -8,6 +8,8 @@ import {registerUser, loginUser} from "../../../redux/userSlice/userSlice"; // I
 import {AppDispatch} from "../../../redux/store/configureStore";
 import {FiAlertTriangle} from "react-icons/fi";
 import "./login-button.css"
+import logo from "../../../assets/svgs/logo-white.svg";
+
 
 
 interface RegisterFormData {
@@ -221,9 +223,9 @@ const RegisterForm: React.FC<RegisterFormData> = ({toggleForm, setEmail}) => {
 
   return (
     <div className="w-96 m-auto bg-widget border-solid border-inherit border-[1px] rounded-[10px] mt-10">
-      <h2 className="text-xl font-bold pt-6 text-center">Your Logo</h2>
+      <img className="mt-4 w-50 h-20 m-auto" src={logo} alt="Logo"/>
       <form onSubmit={handleSubmit}>
-        <div className="mt-4 pb-6 flex flex-col mx-12">
+      <div className="mt-4 pb-6 flex flex-col mx-12">
           <h3 className="text-xl font-bold">Register</h3>
           <div className="mt-4">
             <label htmlFor="email" className="block text-sm">

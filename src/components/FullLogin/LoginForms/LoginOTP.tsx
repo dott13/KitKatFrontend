@@ -4,6 +4,8 @@ import {AppDispatch} from "../../../redux/store/configureStore";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import "./login-button.css"
+import logo from "../../../assets/svgs/logo-white.svg";
+
 
 
 interface LoginOTPFormData {
@@ -158,7 +160,7 @@ const LoginOTPForm: React.FC<LoginOTPFormData> = ({email, toggleForm}) => {
 
   return (
     <div className="w-96 m-auto bg-widget border-solid border-inherit border-[1px] rounded-[10px] mt-10">
-      <h2 className="text-xl font-bold pt-6 text-center">Your Logo</h2>
+      <img className="mt-4 w-50 h-20 m-auto" src={logo} alt="Logo"/>
 
       <div className="mt-4 pb-6 flex flex-col mx-12">
         <h3 className="text-xl font-bold">Verification Code</h3>
