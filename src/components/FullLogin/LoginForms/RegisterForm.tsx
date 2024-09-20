@@ -12,6 +12,8 @@ import "./login-button.css"
 
 interface RegisterFormData {
   email: string;
+  setEmail: (email: string) => void;
+
   password: string;
   confirmPassword: string;
   toggleForm: (toggleType: "login" | "register" | "reset" | "redirect" | "otp") => void;
@@ -60,7 +62,7 @@ const validatePassword = (password: string): string[] => {
   return errors;
 };
 
-const RegisterForm: React.FC<RegisterFormData> = ({toggleForm}) => {
+const RegisterForm: React.FC<RegisterFormData> = ({toggleForm, setEmail}) => {
   const [formData, setFormData] = useState<Partial<RegisterFormData>>({
     email: "",
     password: "",
@@ -157,13 +159,13 @@ const RegisterForm: React.FC<RegisterFormData> = ({toggleForm}) => {
 
         // Dispatch login action after successful registration
         try {
-
           await dispatch(
             loginUser({
               email: formData.email as string,
               password: formData.password as string,
             })
           ).unwrap();
+          setEmail(formData.email as string);
           toggleForm("otp");
 
         } catch (error) {

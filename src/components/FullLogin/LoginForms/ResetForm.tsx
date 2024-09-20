@@ -9,7 +9,7 @@ import "./login-button.css"
 
 interface ResetFormData {
   email: string;
-  toggleForm: (type: "login" | "register" | "reset" | "redirect") => void;
+  toggleForm: (type: "login" | "register" | "reset" | "redirect" | "otp") => void;
   setMessage: (message: string) => void;
 }
 

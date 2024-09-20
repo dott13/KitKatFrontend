@@ -12,11 +12,12 @@ import "./login-button.css"
 
 interface LoginFormData {
   email: string;
+  setEmail: (email: string) => void;
   password: string;
   toggleForm: (toggleType: "login" | "register" | "reset" | "redirect" | "otp") => void;
 }
 
-const LoginForm: React.FC<LoginFormData> = ({toggleForm}) => {
+const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
   const [formData, setFormData] = useState<Partial<LoginFormData>>({
     email: "",
     password: "",
@@ -63,7 +64,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm}) => {
             password: formData.password as string,
           })
         ).unwrap();
-
+        setEmail(formData.email as string);
         toggleForm("otp")
 
       } catch (error) {
