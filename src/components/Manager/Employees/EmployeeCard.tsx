@@ -10,7 +10,7 @@ interface EmployeeCardProps {
     lastName: string;
     email: string;
     seniority: string;
-    language: string;
+    country: string;
     jobTitle: string;
     skills: string[];
     status: boolean;
@@ -18,7 +18,7 @@ interface EmployeeCardProps {
   isOpen: boolean;
   onToggleStatus: () => void;
 }
-
+//Component for Card view in Employee page
 const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
   ({ user, isOpen, onToggleStatus }, ref) => {
     const topSkills = user.skills.slice(0, 3);
@@ -26,7 +26,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
     return (
       <div
         ref={ref}
-        className="w-[18.5em] bg-white h-[10em] my-6 shadow-2xl rounded"
+        className="w-[18.5em] bg-white h-[10em] my-6 shadow-2xl rounded relative"
       >
         <div className="flex justify-between m-4 items-center inter">
           <BiUser color="black" size="24px" />
@@ -47,7 +47,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
             {user.seniority}
           </span>
           <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 rounded">
-            {user.language}
+            {user.country}
           </span>
           <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 rounded">
             {user.jobTitle}
@@ -64,7 +64,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
           ))}
         </div>
         {isOpen && (
-          <div className="absolute top-0 right-0 bg-white border border-gray-300 p-2 rounded shadow-lg z-10 mt-8 flex flex-col items-center">
+          <div className="absolute right-0 top-8 bg-white border border-gray-300 p-2 rounded shadow-lg z-10 flex flex-col items-center">
             <div className="flex items-center">
               <RiRadioButtonLine
                 className={`mr-2 ${
