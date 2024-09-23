@@ -21,7 +21,7 @@ function App() {
           />
           <Route path="/login" element={<LoginPageView />} />
           <Route path="/dashboard" element={<DashboardPageView />} />
-          <Route path="/employees" element={<EmployeesPageView />} />
+          <Route path="/dashboard/employees" element={<EmployeesPageView />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -28,7 +28,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
         ref={ref}
         className="w-[18.5em] bg-white h-[10em] my-6 shadow-2xl rounded relative"
       >
-        <div className="flex justify-between m-4 items-center inter">
+        <div className="flex justify-between m-4 items-center">
           <BiUser color="black" size="24px" />
           <div className="flex flex-col ">
             <p className="text-cardname text-sm font-semibold">

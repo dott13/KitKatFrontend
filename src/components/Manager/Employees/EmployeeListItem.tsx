@@ -24,7 +24,7 @@ const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
         ref={ref}
         className="flex justify-between my-2 p-4 bg-white rounded shadow-xl text-black items-center box-border font-bold"
       >
-        <div className="flex inter">
+        <div className="flex ">
           <div>
             <p className="font-semibold">
               {user.firstName} {user.lastName}
