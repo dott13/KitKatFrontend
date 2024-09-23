@@ -8,7 +8,7 @@ import { FaChevronDown } from "react-icons/fa6";
 const Header = ( ) => {
 
   return (
-    <header className="bg-white flex  items-center">
+    <header className="bg-white flex z-1  items-center">
       {/* Vertical line */}
       <div className="h-20 border-l-2 border-[#F1F5F9] ml-[20%]"/>
       {/* header widgets */}
@@ -17,7 +17,7 @@ const Header = ( ) => {
         {/*Profile icons*/}
         <button className="rounded w-[20%] flex flex-row  h-14 bg-main items-center justify-between px-[1.5%]">
           <img className=" w-10 h-10 " src={user_img} alt="user_img"/>
-          <p className="text-bold">Angela L.</p>
+          <p className="font-bold">Angela L.</p>
             <FaChevronDown />
         </button>
 

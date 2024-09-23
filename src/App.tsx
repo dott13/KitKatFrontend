@@ -13,15 +13,15 @@ function App() {
             path="/"
             element={
               localStorage.getItem("isLoggedIn") === "true" ? (
-                <Navigate to="/dashboard" />
-              ) : (
                 <Navigate to="/login" />
+              ) : (
+                <Navigate to="/dashboard" />
               )
             }
           />
           <Route path="/login" element={<LoginPageView />} />
           <Route path="/dashboard" element={<DashboardPageView />} />
-          <Route path="/dashboard/employees" element={<EmployeesPageView />} />
+          <Route path="/employees" element={<EmployeesPageView />} />
         </Routes>
       </BrowserRouter>
     </div>
