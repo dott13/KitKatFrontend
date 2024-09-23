@@ -70,7 +70,9 @@ const SideBar = ( ) => {
           <div className="mb-8 w-full text-widget">
             <nav>
               <li
-                className={`font-light h-14 text-[18px] flex items-center gap-[10%] px-[5%]  rounded ${pageState === "settings" ? 'bg-widget text-white' : 'bg-white'}`}>
+                className={`font-light h-14 text-[18px] flex items-center gap-[10%] px-[5%]  rounded ${pageState === "settings" ? 'bg-widget text-white' : 'bg-white'}`}
+                onClick={() => navigate("/settings")}
+              >
                 <FiSettings className="w-[27px] h-[27px]"/>
                 <p>Settings</p>
               </li>
