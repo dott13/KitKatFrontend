@@ -3,12 +3,13 @@ import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import {PiSquaresFour} from "react-icons/pi";
 import {FiSettings} from "react-icons/fi";
 import {SlLogout} from "react-icons/sl";
+import { FaUser } from "react-icons/fa6";
 import {useLocation, useNavigate} from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 
 interface SideBarProps{
-  pageState:"dashboard"|"employees"|"project"|"settings"|"logout"
+  pageState:"dashboard"|"employees"|"project"|"settings"|"logout"|"account"
 
 }
 
@@ -53,6 +54,13 @@ const SideBar = ( ) => {
                 >
                   <IoIosCheckboxOutline className="w-[30px] h-[30px]"/>
                   <p>Employees</p>
+                </li>
+                <li
+                  className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%] rounded ${pageState === "account" ? 'bg-widget text-white' : 'bg-white'}`}
+                  onClick={() => navigate("account")}
+                >
+                  <FaUser className="w-[30px] h-[30px]"/>
+                  <p>Your Account</p>
                 </li>
                 <li
                   className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%]  rounded ${pageState === "project" ? 'bg-widget text-white' : 'bg-white'}`}

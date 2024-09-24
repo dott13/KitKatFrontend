@@ -4,6 +4,7 @@ import LoginPageView from "./components/FullLogin/LoginPage/LoginPageView";
 import DashboardPageView from "./components/Manager/dashboard/DashboardPageView.tsx";
 import EmployeesPageView from "./components/Manager/Employees/EmployeesPageView.tsx";
 import Layout from "./Layout.tsx";
+import AccountPageView from "./components/Worker/Account/AccountPageView.tsx";
 
 function App() {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -22,6 +23,7 @@ function App() {
           <Route element={<Layout/>}>
             <Route path="/dashboard" element={<DashboardPageView/>}/>
             <Route path="/employees" element={<EmployeesPageView/>}/>
+            <Route path="/account" element={<AccountPageView/>}/>
             <Route path="/project" />
             <Route path="/settings" />
           </Route>
