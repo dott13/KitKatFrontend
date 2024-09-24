@@ -6,14 +6,29 @@ interface UserState {
   token: string | null; // Add token property
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  list: UserModel[]| []
 }
-//Initial state for the slice for future all null so it reinitializez when called
+//Initial state for the slice for future all null so it reinitialized when called
 const initialState: UserState = {
   user: null,
   token: null, // Initialize token
   status: "idle",
   error: null,
+  list:[]
 };
+
+interface UserModel {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  avatar: Uint8Array;
+  seniority: string;
+  role: string;
+  languages: string[];
+  skills: string[];
+  city: string;
+}
 
 // Define the async thunks with correct return and reject types
 //Login Thunk
@@ -27,6 +42,7 @@ export const loginUser = createAsyncThunk<
     const { user, token } = response.data; // Extract user and token
     return { user, token }; // Return both user data and token
   } catch (error: any) {
+
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Login Failed"
     );
@@ -45,6 +61,21 @@ export const registerUser = createAsyncThunk<
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Registration failed"
+    );
+  }
+});
+
+export const getAllUser = createAsyncThunk<
+  UserModel[] , // Return type
+  { rejectValue: string } // Reject value type
+>("user/all", async (   thunkAPI) => {
+  try {
+    const response = await axios.get("/manager/worker");
+    const users: UserModel[] = response.data.user; // Extract users from response
+    return { users }; // Return user data
+  } catch (error: any) {
+    return thunkAPI.rejectValue(
+      error.response?.data?.message || "Get all workers failed"
     );
   }
 });
@@ -103,6 +134,18 @@ const userSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string; // Ensure correct type
+      })
+      .addCase(getAllUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getAllUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.list = action.payload; // Store the user data in state
+      })
+      .addCase(getAllUser.rejected, (state) => {
+        state.status = "failed";
+        state.error =  "Something went wrong"; // Handle error
       });
   },
 });
