@@ -8,7 +8,7 @@ import {registerUser, loginUser} from "../../../redux/userSlice/userSlice"; // I
 import {AppDispatch} from "../../../redux/store/configureStore";
 import {FiAlertTriangle} from "react-icons/fi";
 import "./login-button.css"
-import logo from "../../../assets/svgs/logo-white.svg";
+import logo from "../../../assets/logo-white.png";
 
 
 

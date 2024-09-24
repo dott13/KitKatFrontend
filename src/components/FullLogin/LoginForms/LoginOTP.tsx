@@ -4,7 +4,7 @@ import {AppDispatch} from "../../../redux/store/configureStore";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import "./login-button.css"
-import logo from "../../../assets/svgs/logo-white.svg";
+import logo from "../../../assets/logo-white.png";
 
 
 

@@ -8,9 +8,9 @@ import { FaChevronDown } from "react-icons/fa6";
 const Header = ( ) => {
 
   return (
-    <header className="bg-white flex z-10  items-center fixed w-full top-0">
+    <header className="bg-white flex z-10  items-center ml-[20%]  w-[80%] fixed top-0">
       {/* Vertical line */}
-      <div className="h-20 border-l-2 border-[#F1F5F9] ml-[20%]"/>
+      <div className="h-20 border-l-1 border-[#F1F5F9] "/>
       {/* header widgets */}
       <div className="px-[20px] py-[10px] flex flex-grow flex-row-reverse  items-center gap-5 text-black">
 

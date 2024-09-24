@@ -4,6 +4,8 @@ import {PiSquaresFour} from "react-icons/pi";
 import {FiSettings} from "react-icons/fi";
 import {SlLogout} from "react-icons/sl";
 import {useLocation, useNavigate} from "react-router-dom";
+import logo from "../../assets/logo.png";
+
 
 interface SideBarProps{
   pageState:"dashboard"|"employees"|"project"|"settings"|"logout"
@@ -21,11 +23,12 @@ const SideBar = ( ) => {
 
 
   return (
-    <>
-      <aside className="bg-white w-[20%] h-screen z-11 px-[1%] border-r-2 border-[#F1F5F9] text-black fixed top-0 flex flex-col justify-between">
+      <aside className="bg-white w-[20%] h-screen z-101 px-[1%] border-r-2 border-[#F1F5F9] text-black fixed top-0 flex flex-col  justify-between">
+
+        <img className=" w-[200px] h-20 mx-auto" src={logo} alt="Logo"/>
 
         {/* Vertical line */}
-        <div className="w-full border-t-[1px] border-widget mt-20"/>
+        <div className="w-full border-t-[1px] border-widget mt-1"/>
 
 
         <div className="flex flex-col h-full items-center justify-between">
@@ -90,7 +93,7 @@ const SideBar = ( ) => {
         </div>
 
       </aside>
-    </>
+
   )
 
 };

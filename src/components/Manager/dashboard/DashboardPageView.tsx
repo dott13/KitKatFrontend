@@ -5,7 +5,7 @@ const DashboardPageView: React.FC = () => {
 
   return (
     <div>
-      <h1 className="ml-[20%] text-black">in development</h1>
+      <h1 className=" text-black ">in development</h1>
     </div>
   );
 };

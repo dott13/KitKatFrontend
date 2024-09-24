@@ -5,7 +5,7 @@ import {resetPasswordUser} from "../../../redux/userSlice/userSlice.tsx";
 import {AppDispatch} from "../../../redux/store/configureStore";
 import {useDispatch} from "react-redux";
 import "./login-button.css"
-import logo from "../../../assets/svgs/logo-white.svg";
+import logo from "../../../assets/logo-white.png";
 
 
 
