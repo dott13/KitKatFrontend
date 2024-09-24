@@ -6,14 +6,29 @@ interface UserState {
   token: string | null; // Add token property
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  list: UserModel[]| []
 }
-//Initial state for the slice for future all null so it reinitialize when called
+//Initial state for the slice for future all null so it reinitialized when called
 const initialState: UserState = {
   user: null,
   token: null, // Initialize token
   status: "idle",
   error: null,
+  list:[]
 };
+
+interface UserModel {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  avatar: Uint8Array;
+  seniority: string;
+  role: string;
+  languages: string[];
+  skills: string[];
+  city: string;
+}
 
 // Define the async thunks with correct return and reject types
 //Login Thunk
@@ -28,6 +43,7 @@ export const loginUser = createAsyncThunk<
     return { message };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Login Failed"
     );
@@ -85,7 +101,22 @@ export const resetPasswordUser = createAsyncThunk<
     );
   }
 })
-
+      
+export const getAllUser = createAsyncThunk<
+  UserModel[] , // Return type
+  { rejectValue: string } // Reject value type
+>("user/all", async (   thunkAPI) => {
+  try {
+    const response = await axios.get("/manager/worker");
+    const users: UserModel[] = response.data.user; // Extract users from response
+    return { users }; // Return user data
+  } catch (error: any) {
+    return thunkAPI.rejectValue(
+      error.response?.data?.message || "Get all workers failed"
+    );
+  }
+});
+      
 //Slice for adding to the redux store also name for using in Selectors later
 //We have reducers for every state of the slice loading rejected or approved so the data is flowing correctly
 const userSlice = createSlice({
@@ -171,6 +202,18 @@ const userSlice = createSlice({
           state.status="failed";
           state.error=action.payload as string;
         })
+      .addCase(getAllUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getAllUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.list = action.payload; // Store the user data in state
+      })
+      .addCase(getAllUser.rejected, (state) => {
+        state.status = "failed";
+        state.error =  "Something went wrong"; // Handle error
+      })
   },
 });
 

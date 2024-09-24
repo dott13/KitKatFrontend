@@ -4,16 +4,16 @@ import { RiRadioButtonLine } from "react-icons/ri";
 
 interface EmployeeListItemProps {
   user: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    seniority: string;
-    country: string;
-    jobTitle: string;
-    skills: string[];
-    language: string;
-    status: boolean;
+    id: number ;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+    seniority: string| null;
+    country: string | null;
+    jobTitle: string | null;
+    skills: string[] | null;
+    language: string[] | null;
+    status: boolean | null;
   };
 }
 //Design for all the items in the list part
@@ -55,7 +55,7 @@ const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
               user.status ? "text-red-500" : "text-green-500"
             }`}
           >
-            {user.status ? "Assigned" : "Available"} //On boolean
+            {user.status ? "Assigned" : "Available"}
           </p>
         </div>{" "}
       </div>
