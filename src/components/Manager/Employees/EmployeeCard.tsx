@@ -64,7 +64,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
           ))}
         </div>
         {isOpen && (
-          <div className="absolute right-0 top-8 bg-white border border-gray-300 p-2 rounded shadow-lg z-10 flex flex-col items-center">
+          <div className="absolute right-0 top-8 bg-white border border-gray-300 p-2 rounded shadow-lg z-1 flex flex-col items-center">
             <div className="flex items-center">
               <RiRadioButtonLine
                 className={`mr-2 ${

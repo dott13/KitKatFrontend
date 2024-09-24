@@ -22,7 +22,7 @@ const SideBar = ( ) => {
 
   return (
     <>
-      <aside className="bg-white w-[20%] h-screen z-2 px-[1%] border-r-2 border-[#F1F5F9] text-black absolute top-0 flex flex-col justify-between">
+      <aside className="bg-white w-[20%] h-screen z-11 px-[1%] border-r-2 border-[#F1F5F9] text-black fixed top-0 flex flex-col justify-between">
 
         {/* Vertical line */}
         <div className="w-full border-t-[1px] border-widget mt-20"/>

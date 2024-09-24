@@ -1,17 +1,17 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import SideBar from "./components/SideBar.tsx";
-import Header from "./components/Header.tsx";
+import SideBar from "./components/layout/SideBar.tsx";
+import Header from "./components/layout/Header.tsx";
 
 
 const Layout: React.FC = () => {
   return (
-    <div className="h-screen flex">
+    <div className="h-screen flex flex-col">
       <SideBar />
-      <div className="flex-grow">
-        <Header />
+      <Header />
+      <main className="ml-[20%] mt-20">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };

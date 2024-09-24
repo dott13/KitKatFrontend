@@ -78,7 +78,7 @@ const EmployeesPageView: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="px-[5%] py-[2%]">
       <div className="flex space-x-4 mb-4 justify-between">
         <button
           onClick={() =>

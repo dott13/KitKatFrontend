@@ -1,5 +1,5 @@
 import { IoMdSearch } from "react-icons/io";
-import user_img from "../assets/svgs/default-user.svg";
+import user_img from "../../assets/svgs/default-user.svg";
 import { FaChevronDown } from "react-icons/fa6";
 
 
@@ -8,7 +8,7 @@ import { FaChevronDown } from "react-icons/fa6";
 const Header = ( ) => {
 
   return (
-    <header className="bg-white flex z-1  items-center">
+    <header className="bg-white flex z-10  items-center fixed w-full top-0">
       {/* Vertical line */}
       <div className="h-20 border-l-2 border-[#F1F5F9] ml-[20%]"/>
       {/* header widgets */}

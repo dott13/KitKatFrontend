@@ -55,7 +55,7 @@ const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
               user.status ? "text-red-500" : "text-green-500"
             }`}
           >
-            {user.status ? "Assigned" : "Available"} //On boolean
+            {user.status ? "Assigned" : "Available"}
           </p>
         </div>{" "}
       </div>
