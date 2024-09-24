@@ -5,15 +5,15 @@ import { RiRadioButtonLine } from "react-icons/ri";
 
 interface EmployeeCardProps {
   user: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    seniority: string;
-    country: string;
-    jobTitle: string;
-    skills: string[];
-    status: boolean;
+    id: number ;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+    seniority: string| null;
+    country: string | null;
+    jobTitle: string | null;
+    skills: string[] | null;
+    status: boolean | null;
   };
   isOpen: boolean;
   onToggleStatus: () => void;
@@ -21,7 +21,7 @@ interface EmployeeCardProps {
 //Component for Card view in Employee page
 const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
   ({ user, isOpen, onToggleStatus }, ref) => {
-    const topSkills = user.skills.slice(0, 3);
+    const topSkills = user.skills?.slice(0, 3);
 
     return (
       <div
@@ -54,7 +54,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
           </span>
         </div>
         <div className="flex justify-start m-4">
-          {topSkills.map((skill, index) => (
+          {topSkills?.map((skill, index) => (
             <span
               key={index}
               className="mr-2 text-[0.625rem] text-black font-light bg-white border-widget border-[1px] px-2 py-1 rounded"
