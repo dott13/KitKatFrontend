@@ -104,14 +104,16 @@ export const resetPasswordUser = createAsyncThunk<
       
 export const getAllUser = createAsyncThunk<
   UserModel[] , // Return type
+  void,
   { rejectValue: string } // Reject value type
->("user/all", async (   thunkAPI) => {
+>("user/all", async (_credentials,   thunkAPI) => {
   try {
     const response = await axios.get("/manager/worker");
     const users: UserModel[] = response.data.user; // Extract users from response
-    return { users }; // Return user data
+    return  users ; // Return user data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return thunkAPI.rejectValue(
+    return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Get all workers failed"
     );
   }
@@ -131,8 +133,8 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
 //login---------------------------------------------------------------------------------------------------------
+    builder
       .addCase(loginUser.pending, (state) => {
         state.status = "loading";
       })
@@ -202,6 +204,7 @@ const userSlice = createSlice({
           state.status="failed";
           state.error=action.payload as string;
         })
+// getUser------------------------------------------------------------------------------------------------------
       .addCase(getAllUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
