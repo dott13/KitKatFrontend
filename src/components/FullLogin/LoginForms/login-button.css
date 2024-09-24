@@ -30,3 +30,19 @@
         color: #fff;
     }
 }
+/*---------------------------------------------------------------------------------------------------------------------*/
+.redirect-animated-button{
+    transition: transform 0.2s ease;
+}
+.redirect-animated-button:hover{
+    transform: scale(0.99);
+    background-color: #2e2e2e;
+    color: #ffffff;
+}
+
+.redirect-animated-button:active {
+    background-color: #2e2e2e;
+    transform: scale(0.97);
+}
+
+
