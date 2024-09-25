@@ -28,7 +28,7 @@ const SideBar = ( ) => {
 
         <img className=" w-[200px] h-20 mx-auto" src={logo} alt="Logo"/>
 
-        {/* Vertical line */}
+        {/* Horizontal line */}
         <div className="w-full border-t-[1px] border-widget mt-1"/>
 
 
@@ -45,28 +45,28 @@ const SideBar = ( ) => {
                   onClick={() => navigate("/dashboard")}
 
                 >
-                  <PiSquaresFour className="w-[30px] h-[30px]"/>
+                  <PiSquaresFour className="w-[25px] h-[25px]"/>
                   <p>Dashboard</p>
                 </li>
                 <li
                   className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%] rounded ${pageState === "employees" ? 'bg-widget text-white' : 'bg-white'}`}
                   onClick={() => navigate("employees")}
                 >
-                  <IoIosCheckboxOutline className="w-[30px] h-[30px]"/>
+                  <IoIosCheckboxOutline className="w-[25px] h-[25px]"/>
                   <p>Employees</p>
                 </li>
                 <li
                   className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%] rounded ${pageState === "account" ? 'bg-widget text-white' : 'bg-white'}`}
                   onClick={() => navigate("account")}
                 >
-                  <FaUser className="w-[30px] h-[30px]"/>
+                  <FaUser className="w-[25px] h-[25px]"/>
                   <p>Your Account</p>
                 </li>
                 <li
                   className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%]  rounded ${pageState === "project" ? 'bg-widget text-white' : 'bg-white'}`}
                   onClick={() => navigate("/project")}
                 >
-                  <AiOutlineFundProjectionScreen className="w-[30px] h-[30px]"/>
+                  <AiOutlineFundProjectionScreen className="w-[25px] h-[25px]"/>
                   <p>Projects</p>
                 </li>
               </ul>
@@ -84,7 +84,7 @@ const SideBar = ( ) => {
                 className={`font-light h-14 text-[18px] flex items-center gap-[10%] px-[5%]  rounded ${pageState === "settings" ? 'bg-widget text-white' : 'bg-white'}`}
                 onClick={() => navigate("/settings")}
               >
-                <FiSettings className="w-[27px] h-[27px]"/>
+                <FiSettings className="w-[23px] h-[23px]"/>
                 <p>Settings</p>
               </li>
 
