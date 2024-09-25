@@ -1,21 +1,21 @@
-import React, {useState} from "react";
-import {FiAlertTriangle} from "react-icons/fi";
-import {Tooltip} from "antd";
-import {resetPasswordUser} from "../../../redux/userSlice/userSlice.tsx";
-import {AppDispatch} from "../../../redux/store/configureStore";
-import {useDispatch} from "react-redux";
-import "./login-button.css"
+import React, { useState } from "react";
+import { FiAlertTriangle } from "react-icons/fi";
+import { Tooltip } from "antd";
+import { resetPasswordUser } from "../../../redux/userSlice/userSlice.tsx";
+import { AppDispatch } from "../../../redux/store/configureStore";
+import { useDispatch } from "react-redux";
+import "./login-button.css";
 import logo from "../../../assets/logo-white.png";
-
-
 
 interface ResetFormData {
   email: string;
-  toggleForm: (type: "login" | "register" | "reset" | "redirect" | "otp") => void;
+  toggleForm: (
+    type: "login" | "register" | "reset" | "redirect" | "otp"
+  ) => void;
   setMessage: (message: string) => void;
 }
 
-const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
+const ResetForm: React.FC<ResetFormData> = ({ toggleForm, setMessage }) => {
   const [formData, setFormData] = useState<Partial<ResetFormData>>({
     email: "",
   });
@@ -27,7 +27,7 @@ const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
@@ -52,18 +52,13 @@ const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
       try {
         toggleForm("redirect");
 
-        console.log("before calling the api")
-
         await dispatch(
           resetPasswordUser({
             email: formData.email as string,
           })
         ).unwrap();
-        console.log("after calling the api")
-
       } catch (error) {
         if (typeof error === "string") {
-
           if (error.includes("User not found")) {
             setFormErrors((prevErrors) => ({
               ...prevErrors,
@@ -75,7 +70,6 @@ const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
               email: ["There is an error during sending email"],
             }));
           }
-
         } else if (error instanceof Error) {
           console.error(error.message || "An unknown error occurred");
           setMessage("An unknown error occurred");
@@ -87,8 +81,7 @@ const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
 
   return (
     <div className="w-96 m-auto bg-widget border-solid border-inherit border-[1px] rounded-[10px] mt-10">
-
-      <img className="mt-4 w-50 h-20 m-auto" src={logo} alt="Logo"/>
+      <img className="mt-4 w-50 h-20 m-auto" src={logo} alt="Logo" />
       <form onSubmit={handleSubmit}>
         <div className="mt-4 pb-6 flex flex-col mx-12">
           <h3 className="text-xl font-bold">Reset Password</h3>
@@ -115,7 +108,7 @@ const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
                   placement="top"
                   overlayClassName="custom-tooltip" //Class for changing the style of antd tooltips
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]"/>
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
                 </Tooltip>
               )}
             </div>
@@ -133,10 +126,11 @@ const ResetForm: React.FC<ResetFormData> = ({toggleForm, setMessage}) => {
             <a
               className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
               onClick={() => toggleForm("login")}
-            > Back
+            >
+              {" "}
+              Back
             </a>
           </p>
-
         </div>
       </form>
     </div>

@@ -5,23 +5,29 @@ import { RiRadioButtonLine } from "react-icons/ri";
 
 interface EmployeeCardProps {
   user: {
-    id: number ;
+    id: number;
     firstName: string | null;
     lastName: string | null;
     email: string | null;
-    seniority: string| null;
-    country: string | null;
-    jobTitle: string | null;
+    seniority: string | null;
+    city: string | null;
+    role: string | null;
     skills: string[] | null;
-    status: boolean | null;
+    status: "Available" | "Assigned" | null;
   };
   isOpen: boolean;
   onToggleStatus: () => void;
 }
-//Component for Card view in Employee page
+
 const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
   ({ user, isOpen, onToggleStatus }, ref) => {
     const topSkills = user.skills?.slice(0, 3);
+
+    // Extract and normalize country
+    let country = user.city ? user.city.split(",").pop()?.trim() : null;
+    if (country === "United States") {
+      country = "US";
+    }
 
     return (
       <div
@@ -30,7 +36,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
       >
         <div className="flex justify-between m-4 items-center">
           <BiUser color="black" size="24px" />
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <p className="text-cardname text-sm font-semibold">
               {user.firstName} {user.lastName}
             </p>
@@ -42,15 +48,24 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
             onClick={onToggleStatus}
           />
         </div>
-        <div className="flex justify-between m-4 items-center">
-          <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 rounded">
+        <div className="flex justify-between m-4 items-center text-center">
+          <span
+            className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
+            title={`${user.seniority}`}
+          >
             {user.seniority}
           </span>
-          <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 rounded">
-            {user.country}
+          <span
+            className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
+            title={`${country}`}
+          >
+            {country}
           </span>
-          <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 rounded">
-            {user.jobTitle}
+          <span
+            className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
+            title={`${user.role}`}
+          >
+            {user.role}
           </span>
         </div>
         <div className="flex justify-start m-4">
@@ -68,15 +83,15 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
             <div className="flex items-center">
               <RiRadioButtonLine
                 className={`mr-2 ${
-                  user.status ? "text-red-500" : "text-green-500"
+                  user.status === "Assigned" ? "text-red-500" : "text-green-500"
                 }`}
               />
               <p
                 className={`mr-2 ${
-                  user.status ? "text-red-500" : "text-green-500"
+                  user.status === "Assigned" ? "text-red-500" : "text-green-500"
                 }`}
               >
-                {user.status ? "Assigned" : "Available"}
+                {user.status}
               </p>
             </div>
             <button onClick={onToggleStatus} className="text-blue-500">
