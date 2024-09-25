@@ -13,7 +13,7 @@ interface EmployeeCardProps {
     city: string | null;
     role: string | null;
     skills: string[] | null;
-    status: "Available" | "Assigned" | null;
+    status: "Available" | "On Project" | null;
   };
   isOpen: boolean;
   onToggleStatus: () => void;
@@ -83,15 +83,19 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
             <div className="flex items-center">
               <RiRadioButtonLine
                 className={`mr-2 ${
-                  user.status === "Assigned" ? "text-red-500" : "text-green-500"
+                  user.status === "On Project"
+                    ? "text-red-500"
+                    : "text-green-500"
                 }`}
               />
               <p
                 className={`mr-2 ${
-                  user.status === "Assigned" ? "text-red-500" : "text-green-500"
+                  user.status === "On Project"
+                    ? "text-red-500"
+                    : "text-green-500"
                 }`}
               >
-                {user.status}
+                {user.status === "On Project" ? "Assigned" : user.status}
               </p>
             </div>
             <button onClick={onToggleStatus} className="text-blue-500">

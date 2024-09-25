@@ -60,15 +60,15 @@ const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
         <div className="flex items-center rounded border-2 border-widget p-3 mr-20">
           <RiRadioButtonLine
             className={`mr-2 ${
-              user.status === "Assigned" ? "text-red-500" : "text-green-500"
+              user.status === "On Project" ? "text-red-500" : "text-green-500"
             }`}
           />
           <p
             className={`mr-2 ${
-              user.status === "Assigned" ? "text-red-500" : "text-green-500"
+              user.status === "On Project" ? "text-red-500" : "text-green-500"
             }`}
           >
-            {user.status}
+            {user.status === "On Project" ? "Assigned" : user.status}
           </p>
         </div>
       </div>
