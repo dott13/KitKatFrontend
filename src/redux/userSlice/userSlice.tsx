@@ -30,6 +30,18 @@ interface UserModel {
   city: string;
 }
 
+interface UpdateUser{
+  userId: number;
+  firstName: string | null;
+  lastName: string | null;
+  avatar: Uint8Array | null;
+  position: string | null;
+  seniority: string | null;
+  city: string | null;
+  languages: string | null;
+  cv: Uint8Array | null;
+}
+
 // Define the async thunks with correct return and reject types
 //Login Thunk
 export const loginUser = createAsyncThunk<
@@ -118,6 +130,23 @@ export const getAllUser = createAsyncThunk<
     );
   }
 });
+
+export const updateUser = createAsyncThunk<
+  {message:string},// Return type
+  UpdateUser,
+  {rejectValue: string } // Reject type
+>("user/update", async (userInfo,  thunkAPI) =>{
+  try {
+    const response = await axios.put("/user/update", userInfo);
+    return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Update Password failed"
+    );
+  }
+})
+
       
 //Slice for adding to the redux store also name for using in Selectors later
 //We have reducers for every state of the slice loading rejected or approved so the data is flowing correctly
@@ -214,6 +243,18 @@ const userSlice = createSlice({
         state.list = action.payload; // Store the user data in state
       })
       .addCase(getAllUser.rejected, (state) => {
+        state.status = "failed";
+        state.error =  "Something went wrong"; // Handle error
+      })
+// updateUser---------------------------------------------------------------------------------------------------
+      .addCase(updateUser.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    })
+      .addCase(updateUser.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(updateUser.rejected, (state) => {
         state.status = "failed";
         state.error =  "Something went wrong"; // Handle error
       })
