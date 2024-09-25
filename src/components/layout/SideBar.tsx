@@ -19,7 +19,6 @@ const SideBar = () => {
   const pageState = location.pathname.split(
     "/"
   )[1] as SideBarProps["pageState"];
-  console.log(pageState);
 
   return (
     <aside className="bg-white w-[20%] h-screen z-101 px-[1%] border-r-2 border-[#F1F5F9] text-black fixed top-0 flex flex-col  justify-between">

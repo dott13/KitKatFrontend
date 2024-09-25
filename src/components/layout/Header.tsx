@@ -12,13 +12,16 @@ const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user);
 
+  const lastNameAbr = user.user?.lastName
+    ? user.user?.lastName.charAt(0) + "."
+    : "";
   const token = localStorage.getItem("token");
-  console.log(token);
   const email = getMailFromToken(token!);
-  console.log(email);
   useEffect(() => {
-    dispatch(getUserByEmail(email!));
-  }, [dispatch]);
+    if (email) {
+      dispatch(getUserByEmail(email));
+    }
+  }, [dispatch, email]);
   return (
     <header className="bg-white flex z-10  items-center ml-[20%]  w-[80%] fixed top-0">
       {/* Vertical line */}
@@ -28,7 +31,9 @@ const Header = () => {
         {/*Profile icons*/}
         <button className="rounded w-[20%] flex flex-row  h-14 bg-main items-center justify-between px-[1.5%]">
           <img className=" w-10 h-10 " src={user_img} alt="user_img" />
-          <p className="font-bold">{user.user?.firstName}</p>
+          <p className="font-bold">
+            {user.user?.firstName} {lastNameAbr}
+          </p>
           <FaChevronDown />
         </button>
 

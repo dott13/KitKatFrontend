@@ -7,6 +7,7 @@ interface UserState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   list: UserModel[] | [];
+  count: number | null;
 }
 //Initial state for the slice for future all null so it reinitialized when called
 const initialState: UserState = {
@@ -15,6 +16,7 @@ const initialState: UserState = {
   status: "idle",
   error: null,
   list: [],
+  count: null,
 };
 
 interface UserModel {
@@ -127,12 +129,26 @@ export const getAllUser = createAsyncThunk<
 >("user/all", async (_, thunkAPI) => {
   try {
     const response = await axios.get("/manager/worker");
-    console.log("API Response:", response.data); // Log the entire response to see the structure
     return response.data; // Directly return the array of users
   } catch (error: any) {
     console.error("API Error:", error); // Log any API errors
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Get all workers failed"
+    );
+  }
+});
+
+export const getUsersOnBenchCount = createAsyncThunk<
+  number, // The type returned, a number (user count)
+  void, // No arguments are required for this thunk
+  { rejectValue: string } // The type for rejected errors
+>("user/getUsersOnBenchCount", async (_, thunkAPI) => {
+  try {
+    const response = await axios.get("/user/without-project");
+    return response.data.count; // Expecting the count in the response
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Failed to fetch bench count"
     );
   }
 });
@@ -232,11 +248,37 @@ const userSlice = createSlice({
       .addCase(getAllUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.list = action.payload; // Store the user data in state
-        console.log("Users fetched:", action.payload); // Log the payload
       })
       .addCase(getAllUser.rejected, (state) => {
         state.status = "failed";
         state.error = "Something went wrong"; // Handle error
+      })
+
+      .addCase(getUserByEmail.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getUserByEmail.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+      .addCase(getUserByEmail.rejected, (state) => {
+        state.status = "failed";
+        state.error = "Something went wrong";
+      })
+      .addCase(getUsersOnBenchCount.pending, (state) => {
+        state.status = "loading"; // Optionally handle loading state
+      })
+      .addCase(
+        getUsersOnBenchCount.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.status = "succeeded";
+          state.count = action.payload; // Store the bench count
+        }
+      )
+      .addCase(getUsersOnBenchCount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string; // Ensure correct type
       });
   },
 });
