@@ -1,12 +1,12 @@
-// UserListItem.tsx
 import { forwardRef } from "react";
 import { RiRadioButtonLine } from "react-icons/ri";
 import { languageMap } from "../../../utils/languages";
+
 interface EmployeeListItemProps {
   user: {
     id: number;
-    name: string | null;
-    surname: string | null;
+    firstName: string | null;
+    lastName: string | null;
     email: string | null;
     seniority: string | null;
     city: string | null;
@@ -19,7 +19,11 @@ interface EmployeeListItemProps {
 
 const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
   ({ user }, ref) => {
-    const country = user.city ? user.city.split(",").pop()?.trim() : null;
+    // Extract and normalize country
+    let country = user.city ? user.city.split(",").pop()?.trim() : null;
+    if (country === "United States") {
+      country = "US";
+    }
 
     return (
       <div
@@ -29,7 +33,7 @@ const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
         <div className="flex">
           <div>
             <p className="font-semibold">
-              {user.name} {user.surname}
+              {user.firstName} {user.lastName}
             </p>
             <p className="text-xs text-cardmail font-medium">{user.email}</p>
           </div>

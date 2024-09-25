@@ -2,10 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface UserState {
-  user: {
-    id: string;
-    email: string;
-  } | null;
+  user: UserModel | null;
   token: string | null; // Add token property
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
@@ -22,8 +19,8 @@ const initialState: UserState = {
 
 interface UserModel {
   id: number;
-  name: string;
-  surname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   avatar: Uint8Array;
   seniority: string;
@@ -31,6 +28,12 @@ interface UserModel {
   languages: string[];
   skills: string[];
   city: string;
+  status: {
+    statusId: number;
+    name: string;
+  } | null;
+  managerId: number | null;
+  languageIdList: number[];
 }
 
 // Define the async thunks with correct return and reject types
@@ -53,7 +56,7 @@ export const loginUser = createAsyncThunk<
 });
 
 export const loginOTPUser = createAsyncThunk<
-  { user: { id: string; email: string }; jwt: string }, // Return type including token
+  { user: UserModel; jwt: string }, // Return type including token
   { email: string; verificationCode: string }, // Argument type
   { rejectValue: string } // Reject type
 >("user/loginOTPUser", async (credentials, thunkAPI) => {
@@ -86,7 +89,7 @@ export const getUserByEmail = createAsyncThunk<
 
 //Register Thunk
 export const registerUser = createAsyncThunk<
-  { id: string; email: string }, // Return type
+  UserModel, // Return type
   { email: string; password: string }, // Argument type
   { rejectValue: string } // Reject type
 >("user/registerUser", async (userInfo, thunkAPI) => {
@@ -179,7 +182,7 @@ const userSlice = createSlice({
         (
           state,
           action: PayloadAction<{
-            user: { id: string; email: string };
+            user: UserModel;
             jwt: string;
           }>
         ) => {
@@ -202,7 +205,7 @@ const userSlice = createSlice({
       })
       .addCase(
         registerUser.fulfilled,
-        (state, action: PayloadAction<{ id: string; email: string }>) => {
+        (state, action: PayloadAction<UserModel>) => {
           state.status = "succeeded";
           state.user = action.payload;
           state.error = null;

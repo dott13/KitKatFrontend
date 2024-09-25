@@ -1,8 +1,24 @@
 import { IoMdSearch } from "react-icons/io";
 import user_img from "../../assets/svgs/default-user.svg";
 import { FaChevronDown } from "react-icons/fa6";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store/configureStore";
+import { getUserByEmail } from "../../redux/userSlice/userSlice";
+import { getMailFromToken } from "../../utils/tokenUtils/getMailFromToken";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.user);
+
+  const token = localStorage.getItem("token");
+  console.log(token);
+  const email = getMailFromToken(token!);
+  console.log(email);
+  useEffect(() => {
+    dispatch(getUserByEmail(email!));
+  }, [dispatch]);
   return (
     <header className="bg-white flex z-10  items-center ml-[20%]  w-[80%] fixed top-0">
       {/* Vertical line */}
@@ -12,7 +28,7 @@ const Header = () => {
         {/*Profile icons*/}
         <button className="rounded w-[20%] flex flex-row  h-14 bg-main items-center justify-between px-[1.5%]">
           <img className=" w-10 h-10 " src={user_img} alt="user_img" />
-          <p className="font-bold">Angela L.</p>
+          <p className="font-bold">{user.user?.firstName}</p>
           <FaChevronDown />
         </button>
 

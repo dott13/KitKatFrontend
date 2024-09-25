@@ -6,24 +6,28 @@ import { RiRadioButtonLine } from "react-icons/ri";
 interface EmployeeCardProps {
   user: {
     id: number;
-    name: string | null;
-    surname: string | null;
+    firstName: string | null;
+    lastName: string | null;
     email: string | null;
     seniority: string | null;
     city: string | null;
     role: string | null;
     skills: string[] | null;
-    status: "Available" | "Assigned" | null; // Change to string type
+    status: "Available" | "Assigned" | null;
   };
   isOpen: boolean;
   onToggleStatus: () => void;
 }
 
-// Component for Card view in Employee page
 const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
   ({ user, isOpen, onToggleStatus }, ref) => {
     const topSkills = user.skills?.slice(0, 3);
-    const country = user.city ? user.city.split(",").pop()?.trim() : null;
+
+    // Extract and normalize country
+    let country = user.city ? user.city.split(",").pop()?.trim() : null;
+    if (country === "United States") {
+      country = "US";
+    }
 
     return (
       <div
@@ -32,9 +36,9 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
       >
         <div className="flex justify-between m-4 items-center">
           <BiUser color="black" size="24px" />
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <p className="text-cardname text-sm font-semibold">
-              {user.name} {user.surname}
+              {user.firstName} {user.lastName}
             </p>
             <p className="text-cardmail text-xs font-medium">{user.email}</p>
           </div>
@@ -44,14 +48,23 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
             onClick={onToggleStatus}
           />
         </div>
-        <div className="flex justify-between m-4 items-center">
-          <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded">
+        <div className="flex justify-between m-4 items-center text-center">
+          <span
+            className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
+            title={`${user.seniority}`}
+          >
             {user.seniority}
           </span>
-          <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded">
+          <span
+            className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
+            title={`${country}`}
+          >
             {country}
           </span>
-          <span className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded">
+          <span
+            className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
+            title={`${user.role}`}
+          >
             {user.role}
           </span>
         </div>
@@ -78,7 +91,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
                   user.status === "Assigned" ? "text-red-500" : "text-green-500"
                 }`}
               >
-                {user.status} {/* Display the status directly */}
+                {user.status}
               </p>
             </div>
             <button onClick={onToggleStatus} className="text-blue-500">
