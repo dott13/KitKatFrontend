@@ -2,11 +2,14 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface UserState {
-  user: { id: string; email: string } | null;
+  user: {
+    id: string;
+    email: string;
+  } | null;
   token: string | null; // Add token property
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
-  list: UserModel[]| []
+  list: UserModel[] | [];
 }
 //Initial state for the slice for future all null so it reinitialized when called
 const initialState: UserState = {
@@ -14,7 +17,7 @@ const initialState: UserState = {
   token: null, // Initialize token
   status: "idle",
   error: null,
-  list:[]
+  list: [],
 };
 
 interface UserModel {
@@ -39,11 +42,10 @@ export const loginUser = createAsyncThunk<
 >("user/loginUser", async (credentials, thunkAPI) => {
   try {
     const response = await axios.post("/api/login", credentials);
-    const { message} = response.data;
+    const { message } = response.data;
     return { message };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Login Failed"
     );
@@ -51,9 +53,9 @@ export const loginUser = createAsyncThunk<
 });
 
 export const loginOTPUser = createAsyncThunk<
-    { user: { id: string; email: string }; jwt: string }, // Return type including token
-    { email: string; verificationCode: string }, // Argument type
-    { rejectValue: string } // Reject type
+  { user: { id: string; email: string }; jwt: string }, // Return type including token
+  { email: string; verificationCode: string }, // Argument type
+  { rejectValue: string } // Reject type
 >("user/loginOTPUser", async (credentials, thunkAPI) => {
   try {
     const response = await axios.post("/api/login-otp", credentials);
@@ -62,12 +64,25 @@ export const loginOTPUser = createAsyncThunk<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "LoginOTP Failed"
+      error.response?.data?.message || "LoginOTP Failed"
     );
   }
 });
 
-
+export const getUserByEmail = createAsyncThunk<
+  UserModel, // Return type
+  string, // Argument type: user email
+  { rejectValue: string } // Reject type
+>("user/getUserByEmail", async (email, thunkAPI) => {
+  try {
+    const response = await axios.get(`/user/${email}`);
+    return response.data; // Assuming the response is the user object
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Get user by email failed"
+    );
+  }
+});
 
 //Register Thunk
 export const registerUser = createAsyncThunk<
@@ -87,38 +102,38 @@ export const registerUser = createAsyncThunk<
 });
 
 export const resetPasswordUser = createAsyncThunk<
-    {message:string},// Return type
-    {email:string},// Argument type
-    {rejectValue: string } // Reject type
->("user/reset-password", async (userInfo,  thunkAPI) =>{
+  { message: string }, // Return type
+  { email: string }, // Argument type
+  { rejectValue: string } // Reject type
+>("user/reset-password", async (userInfo, thunkAPI) => {
   try {
     const response = await axios.post("/user/reset-password", userInfo);
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Reset Password failed"
+      error.response?.data?.message || "Reset Password failed"
     );
   }
-})
-      
+});
+
 export const getAllUser = createAsyncThunk<
-  UserModel[] , // Return type
+  UserModel[], // Assuming UserModel is correctly defined
   void,
-  { rejectValue: string } // Reject value type
->("user/all", async (_credentials,   thunkAPI) => {
+  { rejectValue: string }
+>("user/all", async (_, thunkAPI) => {
   try {
     const response = await axios.get("/manager/worker");
-    const users: UserModel[] = response.data.user; // Extract users from response
-    return  users ; // Return user data
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    console.log("API Response:", response.data); // Log the entire response to see the structure
+    return response.data; // Directly return the array of users
   } catch (error: any) {
+    console.error("API Error:", error); // Log any API errors
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Get all workers failed"
     );
   }
 });
-      
+
 //Slice for adding to the redux store also name for using in Selectors later
 //We have reducers for every state of the slice loading rejected or approved so the data is flowing correctly
 const userSlice = createSlice({
@@ -133,31 +148,34 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-//login---------------------------------------------------------------------------------------------------------
+    //login---------------------------------------------------------------------------------------------------------
     builder
       .addCase(loginUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(loginUser.fulfilled,
+      .addCase(
+        loginUser.fulfilled,
         (
           state,
           action: PayloadAction<{
-            message:string
+            message: string;
           }>
         ) => {
           state.status = "succeeded";
           state.token = action.payload.message;
           state.error = null;
-         })
+        }
+      )
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string; // Ensure correct type
       })
-//login-otp---------------------------------------------------------------------------------------------------------
+      //login-otp---------------------------------------------------------------------------------------------------------
       .addCase(loginOTPUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(loginOTPUser.fulfilled,
+      .addCase(
+        loginOTPUser.fulfilled,
         (
           state,
           action: PayloadAction<{
@@ -171,17 +189,19 @@ const userSlice = createSlice({
           state.error = null;
 
           localStorage.setItem("token", action.payload.jwt);
-      })
+        }
+      )
       .addCase(loginOTPUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string; // Ensure correct type
       })
 
-//register---------------------------------------------------------------------------------------------------------
+      //register---------------------------------------------------------------------------------------------------------
       .addCase(registerUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(registerUser.fulfilled,
+      .addCase(
+        registerUser.fulfilled,
         (state, action: PayloadAction<{ id: string; email: string }>) => {
           state.status = "succeeded";
           state.user = action.payload;
@@ -192,19 +212,16 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string; // Ensure correct type
       })
-//reset---------------------------------------------------------------------------------------------------------
-        .addCase(resetPasswordUser.fulfilled,
-        (state) => {
-          state.status = "succeeded";
-          state.error = null;
-        }
-      )
-      .addCase(resetPasswordUser.rejected,
-        (state, action) => {
-          state.status="failed";
-          state.error=action.payload as string;
-        })
-// getUser------------------------------------------------------------------------------------------------------
+      //reset---------------------------------------------------------------------------------------------------------
+      .addCase(resetPasswordUser.fulfilled, (state) => {
+        state.status = "succeeded";
+        state.error = null;
+      })
+      .addCase(resetPasswordUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+      // getUser------------------------------------------------------------------------------------------------------
       .addCase(getAllUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -212,11 +229,12 @@ const userSlice = createSlice({
       .addCase(getAllUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.list = action.payload; // Store the user data in state
+        console.log("Users fetched:", action.payload); // Log the payload
       })
       .addCase(getAllUser.rejected, (state) => {
         state.status = "failed";
-        state.error =  "Something went wrong"; // Handle error
-      })
+        state.error = "Something went wrong"; // Handle error
+      });
   },
 });
 
