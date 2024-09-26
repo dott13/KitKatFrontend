@@ -12,6 +12,7 @@ import {getIdFromToken} from "../../../utils/tokenUtils/getIdFromToken.tsx";
 import {LanguageAbbreviations, languageAbbreviationsIdMap} from "../../../utils/languages.ts";
 import {CityIdMap, ReversedCountryIdMap} from "../../../utils/country.ts";
 import {JobTitleIdMap} from "../../../utils/Position.ts";
+import {JobTitleRankIdMap} from "../../../utils/Seniority.ts";
 
 const CheckboxWithIcon = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -86,7 +87,7 @@ const AccountForm =()=>{
       email: userRoot.user?.email || "",
       avatar: new Uint8Array(),
       position: userRoot.user?.position || "",
-      seniority: userRoot.user?.seniority || "",
+      seniority: userRoot.user?.seniority.name || "",
       city: userRoot.user?.city.cityName || "",
       country: userRoot.user?.city.country.countryName || "",
       languages: mappedLanguages || [],
@@ -607,12 +608,11 @@ const AccountForm =()=>{
 
               >
                 <option value="">Select Seniority</option>
-                <option value="Junior">Junior</option>
-                <option value="Associate">Associate</option>
-                <option value="Mid Level">Mid Level</option>
-                <option value="Senior">Senior</option>
-                <option value="Lead">Lead</option>
-                <option value="Manager">Manager</option>
+                {Object.entries(JobTitleRankIdMap).map(([title, id]) => (
+                  <option key={id} value={title}>
+                    {title}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

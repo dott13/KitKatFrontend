@@ -25,7 +25,10 @@ interface UserModel {
   lastName: string;
   email: string;
   avatar: Uint8Array;
-  seniority: string;
+  seniority: {
+    "seniortyId": number;
+    "name": string;
+  };
   role: string;
   languages: string;
   skills: string[];
