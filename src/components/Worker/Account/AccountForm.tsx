@@ -10,6 +10,7 @@ import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
 import { updateUser} from "../../../redux/userSlice/userSlice.tsx";
 import {getIdFromToken} from "../../../utils/tokenUtils/getIdFromToken.tsx";
 import {LanguageAbbreviations, languageAbbreviationsIdMap} from "../../../utils/languages.ts";
+import {CityIdMap, ReversedCountryIdMap} from "../../../utils/country.ts";
 
 const CheckboxWithIcon = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -43,6 +44,7 @@ interface UserData{
   position: string ;
   seniority: string ;
   city: string;
+  country:string;
   languages: string[];
   cv: Uint8Array;
 }
@@ -64,6 +66,7 @@ const AccountForm =()=>{
     position: "",
     seniority: "",
     city: "",
+    country:"",
     languages: [],
     cv: new Uint8Array(),
   });
@@ -83,7 +86,8 @@ const AccountForm =()=>{
       avatar: new Uint8Array(),
       position: userRoot.user?.position || "",
       seniority: userRoot.user?.seniority || "",
-      // city: userRoot.user?.city || "",
+      city: userRoot.user?.city.cityName || "",
+      country: userRoot.user?.city.country.countryName || "",
       languages: mappedLanguages || [],
       cv: new Uint8Array(),
     }));
@@ -250,9 +254,9 @@ const AccountForm =()=>{
     if (isLoading) return;
     setIsLoading(true)
     e.preventDefault();
-    console.log("yeey user is submitted", user)
     try {
       await dispatch(
+
         updateUser({
           userId: idFromToken!,
           firstName: user.firstName?
@@ -270,9 +274,9 @@ const AccountForm =()=>{
           seniority: user.seniority?
             user.seniority as string
             :null,
-          city: user.city?
-            user.city as string
-            :null,
+          city: user.city
+            ?  user.city
+            : null,
           languages: user.languages && user.languages.length > 0
             ? user.languages
               .map(language => languageAbbreviationsIdMap[language])
@@ -283,12 +287,13 @@ const AccountForm =()=>{
             : null,
         })
       )
+
     }catch (error){
       if (typeof error === "string") {
-        if (error.includes("UserData not found")) {
+        if (error.includes("City not found")) {
           setDataErrors((prevErrors) => ({
             ...prevErrors,
-            email: ["UserData with this email not found."],
+            city: ["UserData with this email not found."],
           }));
         } else if (error.includes("Incorrect password")) {
           setDataErrors((prevErrors) => ({
@@ -448,17 +453,17 @@ const AccountForm =()=>{
                 id="country"
                 className="w-full h-full focus:outline-0 cursor-pointer"
                 onChange={handleChange}
-                value={user.city}
+                value={user.country}
               >
-
                 <option value="">Select Country</option>
-                <option value="Afghanistan">Afghanistan</option>
-                <option value="MD">Moldova</option>
-                <option value="USA">USA</option>
+                {Object.entries(ReversedCountryIdMap).map(([countryName, countryId]) => (
+                  <option key={countryId} value={countryName}>
+                    {countryName}
+                  </option>
+                ))}
               </select>
 
             </div>
-
 
 
             <div className={`flex items-center border  rounded px-2 h-full w-[48%] focus:outline-0 ${
@@ -475,9 +480,11 @@ const AccountForm =()=>{
               >
 
                 <option value="">Select City</option>
-                <option value="CH">Chisinau</option>
-                <option value="ORH">Orhei</option>
-                <option value="USA">USA</option>
+                {Object.entries(CityIdMap).map(([cityName, cityId]) => (
+                  <option key={cityId} value={cityName}>
+                    {cityName}
+                  </option>
+                ))}
               </select>
 
             </div>

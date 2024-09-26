@@ -29,7 +29,14 @@ interface UserModel {
   role: string;
   languages: string;
   skills: string[];
-  city: string;
+  city: {
+    cityId:string;
+    cityName: string,
+    country: {
+      countryId: 2,
+      countryName: string
+    }
+  };
   position: string | null;
   status: {
     statusId: number;
@@ -298,7 +305,7 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error =  "Something went wrong"; // Handle error
       })
-
+// getUserByEmail----------------------------------------------------------------------------------------------
       .addCase(getUserByEmail.pending, (state) => {
         state.status = "loading";
         state.error = null;
