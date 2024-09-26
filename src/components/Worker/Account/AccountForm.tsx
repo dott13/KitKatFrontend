@@ -11,6 +11,7 @@ import { updateUser} from "../../../redux/userSlice/userSlice.tsx";
 import {getIdFromToken} from "../../../utils/tokenUtils/getIdFromToken.tsx";
 import {LanguageAbbreviations, languageAbbreviationsIdMap} from "../../../utils/languages.ts";
 import {CityIdMap, ReversedCountryIdMap} from "../../../utils/country.ts";
+import {JobTitleIdMap} from "../../../utils/Position.ts";
 
 const CheckboxWithIcon = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -268,9 +269,11 @@ const AccountForm =()=>{
           avatar:user.avatar && user.avatar.length > 0 ?
             user.avatar as Uint8Array
             : null,
-          position: user.position?
-            user.position as string
-            :null,
+          position: user.position ?
+            //todo find the right request type :((
+            // JobTitleIdMap[user.position].toString()
+            user.position
+            : null,
           seniority: user.seniority?
             user.seniority as string
             :null,
@@ -565,19 +568,11 @@ const AccountForm =()=>{
               >
 
                 <option value="">Select Position</option>
-                <option value="IT technician">IT technician</option>
-                <option value="Support specialist">Support specialist</option>
-                <option value="Quality assurance tester">Quality assurance tester</option>
-                <option value="IT security specialist">IT security specialist</option>
-                <option value="Computer programmer">Computer programmer</option>
-                <option value="System analyst">System analyst</option>
-                <option value="Network engineer">Network engineer</option>
-                <option value="Software engineer">Software engineer</option>
-                <option value="User experience designer">User experience designer</option>
-                <option value="Database administrator">Database administrator</option>
-                <option value="Data scientist">Data scientist</option>
-                <option value="Computer scientist">Computer scientist</option>
-                <option value="IT director">IT director</option>
+                {Object.entries(JobTitleIdMap).map(([title, id]) => (
+                  <option key={id} value={title}>
+                    {title}
+                  </option>
+                ))}
 
               </select>
 
