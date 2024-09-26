@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 interface SideBarProps {
-  pageState:"dashboard"|"employees"|"project"|"settings"|"logout"
+  pageState:"dashboard"|"employees"|"project"|"settings"|"logout"|"account"
 
 }
 

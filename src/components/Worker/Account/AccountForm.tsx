@@ -4,10 +4,12 @@ import {IoMdCloudUpload} from "react-icons/io";
 import user_img from "../../../assets/svgs/default-user.svg";
 import {PiBriefcaseLight, PiCityLight} from "react-icons/pi";
 import {TbWorld} from "react-icons/tb";
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "../../../redux/store/configureStore.tsx";
-import {updateUser} from "../../../redux/userSlice/userSlice.tsx";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
+import { updateUser} from "../../../redux/userSlice/userSlice.tsx";
+import {getIdFromToken} from "../../../utils/tokenUtils/getIdFromToken.tsx";
+import {LanguageAbbreviations, languageAbbreviationsIdMap} from "../../../utils/languages.ts";
 
 const CheckboxWithIcon = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -36,6 +38,7 @@ const CheckboxWithIcon = () => {
 interface UserData{
   firstName: string ;
   lastName: string ;
+  email: string ;
   avatar: Uint8Array ;
   position: string ;
   seniority: string ;
@@ -48,10 +51,15 @@ const AccountForm =()=>{
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const token = localStorage.getItem("token");
+
   const [isLoading, setIsLoading] = useState(false);
+  const userRoot = useSelector((state: RootState) => state.user);
+
   const [user, setUser] = useState<Partial<UserData>>({
     firstName: "",
     lastName: "",
+    email:"",
     avatar: new Uint8Array(),
     position: "",
     seniority: "",
@@ -60,9 +68,35 @@ const AccountForm =()=>{
     cv: new Uint8Array(),
   });
 
+  useEffect(() => {
+    const reverseLanguageIdMap = Object.fromEntries(
+      Object.entries(languageAbbreviationsIdMap).map(([key, value]) => [value, key])
+    );
+
+    const mappedLanguages = userRoot.user?.languages?.split(",")
+      .map((id: string) => reverseLanguageIdMap[parseInt(id, 10)]) // Map each ID to the language code
+
+    setUser(() => ({
+      firstName: userRoot.user?.firstName || "",
+      lastName: userRoot.user?.lastName || "",
+      email: userRoot.user?.email || "",
+      avatar: new Uint8Array(),
+      position: userRoot.user?.position || "",
+      seniority: userRoot.user?.seniority || "",
+      // city: userRoot.user?.city || "",
+      languages: mappedLanguages || [],
+      cv: new Uint8Array(),
+    }));
+  }, [userRoot]);
+
   const [dataErrors, setDataErrors] = useState<
     Partial<Record<keyof UserData, string[]>>
   >({});
+
+  const idFromToken = getIdFromToken(token!);
+
+
+
 
   const resetUser = (e: React.FormEvent) =>{
     e.preventDefault();
@@ -220,7 +254,7 @@ const AccountForm =()=>{
     try {
       await dispatch(
         updateUser({
-          userId: 2,
+          userId: idFromToken!,
           firstName: user.firstName?
             user.firstName as string
             :null,
@@ -239,8 +273,10 @@ const AccountForm =()=>{
           city: user.city?
             user.city as string
             :null,
-          languages: user.languages && user.languages.length > 0 ?
-            user.languages.join(", ") as string
+          languages: user.languages && user.languages.length > 0
+            ? user.languages
+              .map(language => languageAbbreviationsIdMap[language])
+              .join(",")
             : null,
           cv:user.cv && user.cv.length > 0 ?
             user.cv as Uint8Array
@@ -347,7 +383,7 @@ const AccountForm =()=>{
               name="email"
               id="email"
               type="text"
-              placeholder="youremail@email.com"
+              placeholder={user.email}
               disabled={true}
               className={` bg-[#CFCFCF] rounded px-4 focus:outline-0 `}
             />
@@ -473,10 +509,13 @@ const AccountForm =()=>{
                 value={""}
                 onChange={handleChange}
               >
-                <option value=""></option>
-                <option value="RO">Romanian</option>
-                <option value="RU">Russian</option>
-                <option value="EN">English</option>
+                <option value="">Select Language</option>
+                {/* Dynamically generate options from the enum */}
+                {Object.entries(LanguageAbbreviations).map(([abbr, language]) => (
+                  <option key={abbr} value={abbr}>
+                    {language}
+                  </option>
+                ))}
               </select>
             </div>
 

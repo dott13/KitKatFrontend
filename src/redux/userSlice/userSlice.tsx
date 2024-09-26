@@ -27,9 +27,10 @@ interface UserModel {
   avatar: Uint8Array;
   seniority: string;
   role: string;
-  languages: string[];
+  languages: string;
   skills: string[];
   city: string;
+  position: string | null;
   status: {
     statusId: number;
     name: string;
