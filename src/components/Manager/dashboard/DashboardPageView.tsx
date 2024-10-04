@@ -3,6 +3,7 @@ import OnBenchStatCard from "./OnBenchStatCard";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
 import {getUsersOnBenchCount} from "../../../redux/userSlice/userSlice.tsx";
+import PieChartCard from "./PieChartCard.tsx";
 
 
 const DashboardPageView: React.FC = () => {
@@ -14,8 +15,8 @@ const DashboardPageView: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      <div className="mx-10 my-8 flex flex-row items-start">
+    <div className='grid grid-cols-3 grid-rows-4 gap-x-8 mx-[7%] my-[5%]'>
+      <div className="col-span-1 row-span-1">
         <OnBenchStatCard
           count={count}
           icon={"bench"}
@@ -23,13 +24,20 @@ const DashboardPageView: React.FC = () => {
           title={"on Bench"}
           description={"High number of employees on bench"}
         />
-        <OnBenchStatCard
+      </div>
+
+      <div className="col-span-1 row-span-1">
+
+      <OnBenchStatCard
           count={"15 d"}
           icon={"clock"}
           warning={"octagon"}
           title={"average time of waiting"}
           description={"High number of employees on bench"}
         />
+      </div>
+        <div className="col-span-1 row-span-1">
+
         <OnBenchStatCard
           count={"3"}
           icon={"map"}
@@ -37,10 +45,12 @@ const DashboardPageView: React.FC = () => {
           title={"on Bench in UK"}
           description={"High number of employees on bench"}
         />
+        </div>
+
+      <div className="col-span-1 row-span-2">
+      <PieChartCard/>
       </div>
 
-
-      <h1 className=" text-black ">in development</h1>
     </div>
   );
 };

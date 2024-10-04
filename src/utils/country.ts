@@ -17,6 +17,24 @@ export const ReversedCountryIdMap = Object.entries(CountryIdMap).reduce((acc, [i
   return acc;
 }, {} as { [key: string]: number });
 
+export const CountryAbbreviationMap = {
+  1: "US",
+  2: "CA",
+  3: "MX",
+  4: "DE",
+  5: "FR",
+  6: "IT",
+  7: "JP",
+  8: "AU",
+  9: "BR",
+  10: "IN"
+} as const;
+
+export const ReversedCountryAbbreviationMap = Object.entries(CountryAbbreviationMap).reduce((acc, [id, name]) => {
+  acc[name] = Number(id); // Store the ID as a number
+  return acc;
+}, {} as { [key: string]: number });
+
 export const CityIdMap = {
   "New York": 1,
   "Los Angeles": 2,
