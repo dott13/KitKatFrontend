@@ -46,24 +46,21 @@ const OnBenchStatCard: React.FC<OnBenchStatData> = ({title, count, description, 
 
 
   return (
-    <div className="relative w-[24vw] h-[14vh] mx-8 my-12 bg-white shadow-md rounded-lg">
-      <div className="flex justify-between h-full px-4">
+    <div className="relative w-[100%] h-[14vh]  bg-white shadow-md rounded-lg">
+      <div className="flex flex-col flex-grow text-right justify-between h-full px-4 pb-4">
         <div
           className="absolute -top-3 left-5 w-[5rem] h-[5rem] bg-filters rounded flex justify-center items-center shadow-lg">
           {renderImage()}
-
         </div>
-        <div className="flex flex-col flex-grow text-right">
-          <p className="text-widget font-thin text-base mt-2 ">{title}</p>
-          <span className="text-black text-2xl font-medium ">{count}</span>
-          <hr className="border-t-2 border-widget mt-6 "/>
+        <p className="text-widget font-thin text-base  mt-2">{title}</p>
+        <span className="text-black text-2xl font-medium ">{count}</span>
+        <hr className="border-t-2 border-widget  "/>
 
-          <div className="flex items-center mt-1 ml-4">
-            {renderWarning()}
-            <p className="text-widget font-regular text-xs">
-              {description}
-            </p>
-          </div>
+        <div className="flex  items-center mb-[-7px]  ml-4">
+          {renderWarning()}
+          <p className="text-widget font-regular text-xs">
+            {description}
+          </p>
         </div>
       </div>
     </div>
