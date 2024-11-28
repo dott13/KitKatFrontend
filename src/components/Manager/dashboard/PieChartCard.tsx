@@ -16,6 +16,8 @@ const data = {
 };
 const options: ChartOptions<'doughnut'> = {
   cutout: '70%',
+  maintainAspectRatio: false,
+  responsive: true,
   plugins: {
     legend: {
       position: 'bottom',

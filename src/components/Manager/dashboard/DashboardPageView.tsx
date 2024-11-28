@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
 import {getUsersOnBenchCount} from "../../../redux/userSlice/userSlice.tsx";
 import PieChartCard from "./PieChartCard.tsx";
+import LineGraphCard from "./LineGraphCard.tsx";
 
 
 const DashboardPageView: React.FC = () => {
@@ -49,6 +50,10 @@ const DashboardPageView: React.FC = () => {
 
       <div className="col-span-1 row-span-2">
       <PieChartCard/>
+      </div>
+
+      <div className='col-span-2 row-span-2'>
+        <LineGraphCard/>
       </div>
 
     </div>
