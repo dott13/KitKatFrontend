@@ -3,19 +3,55 @@ import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import { PiSquaresFour } from "react-icons/pi";
 import { FiSettings } from "react-icons/fi";
 import { SlLogout } from "react-icons/sl";
+import { FaUser } from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 interface SideBarProps {
-  pageState: "dashboard" | "employees" | "project" | "settings" | "logout";
+  pageState:"dashboard"|"employees"|"project"|"settings"|"logout"|"account"
+
+}
+interface SideBarState {
+  role: "ROLE_MANAGER"| "ROLE_USER" | "ROLE_ADMIN"|null
 }
 
-const SideBar = () => {
+
+const SideBar: React.FC<SideBarState> = ({role}) => {
+
+  const menuItems = [
+    {
+      label: "Dashboard",
+      icon: <PiSquaresFour className="w-[30px] h-[30px]" />,
+      path: "/dashboard",
+      allowedRoles: ["ROLE_MANAGER", "ROLE_USER", "ROLE_ADMIN"],
+    },
+    {
+      label: "Employees",
+      icon: <IoIosCheckboxOutline className="w-[30px] h-[30px]" />,
+      path: "/employees",
+      allowedRoles: ["ROLE_MANAGER", "ROLE_ADMIN"],
+    },
+    {
+      label: "Your Account",
+      icon: <FaUser className="w-[25px] h-[25px]" />,
+      path: "/account",
+      allowedRoles: ["ROLE_USER", "ROLE_ADMIN"],
+    },
+    {
+      label: "Projects",
+      icon: <AiOutlineFundProjectionScreen className="w-[30px] h-[30px]" />,
+      path: "/project",
+      allowedRoles: ["ROLE_MANAGER", "ROLE_ADMIN", "ROLE_USER"],
+    },
+  ];
   const location = useLocation();
 
   const navigate = useNavigate();
 
-  // Get the last part of the URL to use as the pageState
+  const filteredMenuItems = role
+    ? menuItems.filter((item) => item.allowedRoles.includes(role))
+    : [];
+
   const pageState = location.pathname.split(
     "/"
   )[1] as SideBarProps["pageState"];
@@ -24,7 +60,7 @@ const SideBar = () => {
     <aside className="bg-white w-[20%] h-screen z-101 px-[1%] border-r-2 border-[#F1F5F9] text-black fixed top-0 flex flex-col  justify-between">
       <img className=" w-[200px] h-20 mx-auto" src={logo} alt="Logo" />
 
-      {/* Vertical line */}
+        {/* Horizontal line */}
       <div className="w-full border-t-[1px] border-widget mt-1" />
 
       <div className="flex flex-col h-full items-center justify-between">
@@ -33,37 +69,18 @@ const SideBar = () => {
           <p className="font-bold">MENU</p>
           <nav className="mt-4">
             <ul>
-              <li
-                className={`font-light h-14 text-[18px] flex items-center gap-[10%] px-[5%]  rounded ${
-                  pageState === "dashboard"
-                    ? "bg-widget text-white"
-                    : "bg-white"
-                }`}
-                onClick={() => navigate("/dashboard")}
-              >
-                <PiSquaresFour className="w-[30px] h-[30px]" />
-                <p>Dashboard</p>
-              </li>
-              <li
-                className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%] rounded ${
-                  pageState === "employees"
-                    ? "bg-widget text-white"
-                    : "bg-white"
-                }`}
-                onClick={() => navigate("employees")}
-              >
-                <IoIosCheckboxOutline className="w-[30px] h-[30px]" />
-                <p>Employees</p>
-              </li>
-              <li
-                className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%]  rounded ${
-                  pageState === "project" ? "bg-widget text-white" : "bg-white"
-                }`}
-                onClick={() => navigate("/project")}
-              >
-                <AiOutlineFundProjectionScreen className="w-[30px] h-[30px]" />
-                <p>Projects</p>
-              </li>
+              {filteredMenuItems.map((item) => (
+                <li
+                  key={item.path}
+                  className={`font-light h-14 text-[18px] flex items-center gap-[10%] px-[5%] rounded ${
+                    pageState === item.path.slice(1) ? "bg-widget text-white" : "bg-white"
+                  }`}
+                  onClick={() => navigate(item.path)}
+                >
+                  {item.icon}
+                  <p>{item.label}</p>
+                </li>
+              ))}
             </ul>
           </nav>
 
@@ -79,7 +96,7 @@ const SideBar = () => {
               }`}
               onClick={() => navigate("/settings")}
             >
-              <FiSettings className="w-[27px] h-[27px]" />
+                <FiSettings className="w-[27px] h-[27px]"/>
               <p>Settings</p>
             </li>
 

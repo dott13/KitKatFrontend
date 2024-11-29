@@ -23,3 +23,16 @@ export const languageMap: { [key: string]: string } = {
   Chinese: "ZH",
   Japanese: "JA",
 };
+
+
+export const languageAbbreviationsIdMap: { [key: string]: number } = {
+  EN: 1,
+  FR: 3,
+  DE: 4,
+  ES: 2,
+  IT: 5,
+  PT: 6,
+  RU: 9,
+  ZH: 7,
+  JA: 8,
+};

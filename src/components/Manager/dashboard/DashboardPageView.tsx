@@ -1,13 +1,71 @@
-import React from "react";
+import React, {useEffect} from "react";
 import OnBenchStatCard from "./OnBenchStatCard";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
+import PieChartCard from "./PieChartCard.tsx";
+import LineGraphCard from "./LineGraphCard.tsx";
+import {getUsersOnBenchCount} from "../../../redux/statistic/statsSlice.tsx";
+
 
 const DashboardPageView: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { count, status } = useSelector((state: RootState) => ({
+    count: state.stats.count,
+    status: state.stats.status,
+  }));
+
+  useEffect(() => {
+    dispatch(getUsersOnBenchCount());
+  }, [dispatch]);
+
   return (
-    <div>
-      <div className="mx-10 my-8">
-        <OnBenchStatCard />
+    <div className='grid grid-cols-3 grid-rows-4 gap-x-8 mx-[7%] my-[5%]'>
+      <div className="col-span-1 row-span-1">
+        <OnBenchStatCard
+          count={count}
+          icon={"bench"}
+          warning={"circle"}
+          title={"on Bench"}
+          description={"High number of employees on bench"}
+          status={status}
+        />
       </div>
-      <h1 className=" text-black ">in development</h1>
+
+      <div className="col-span-1 row-span-1">
+
+      <OnBenchStatCard
+          count={"15 d"}
+          icon={"clock"}
+          warning={"octagon"}
+          title={"average time of waiting"}
+          description={"High number of employees on bench"}
+          status={status}
+        />
+      </div>
+        <div className="col-span-1 row-span-1">
+
+        <OnBenchStatCard
+          count={"3"}
+          icon={"map"}
+          warning={"triangle"}
+          title={"on Bench in UK"}
+          description={"High number of employees on bench"}
+          status={status}
+        />
+        </div>
+
+      <div className="col-span-1 row-span-2">
+      <PieChartCard
+        status={status}
+      />
+      </div>
+
+      <div className='col-span-2 row-span-2'>
+        <LineGraphCard
+          status={status}
+        />
+      </div>
+
     </div>
   );
 };
