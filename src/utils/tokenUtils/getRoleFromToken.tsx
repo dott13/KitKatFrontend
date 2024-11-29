@@ -11,7 +11,7 @@ export const getRoleFromToken = (token: string): string | null => {
 
   try {
     const decoded = jwtDecode<DecodedToken>(token);
-    return decoded.role || null; // Return email if exists
+    return decoded.role || null; // Return role if exists
   } catch (error) {
     console.error("Failed to decode token:", error);
     return null; // Return null on failure

@@ -23,7 +23,7 @@ function App() {
   const token = localStorage.getItem("token");
   const userRole = (validRoles.includes(getRoleFromToken(token!) as UserRoles["role"])
     ? getRoleFromToken(token!)
-    : null) as UserRoles["role"] | null;  console.log(userRole);
+    : null) as UserRoles["role"] | null;
 
 
   return (

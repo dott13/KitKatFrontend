@@ -76,7 +76,6 @@ const AccountForm =()=>{
   useEffect(() => {
     dispatch(() => {
       getUserByEmail(getMailFromToken(token!))
-      console.log(userRoot);
     })}, [dispatch, token, userRoot])
 
 

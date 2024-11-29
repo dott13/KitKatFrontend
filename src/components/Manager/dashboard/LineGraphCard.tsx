@@ -8,8 +8,10 @@ import {
   LineElement,
   BarElement,
 } from 'chart.js';
-import {Line} from "react-chartjs-2";
+import { Line} from "react-chartjs-2";
 import {Month} from "../../../utils/months.ts";
+import {Spin} from "antd";
+import {LoadingOutlined} from "@ant-design/icons";
 
 ChartJS.register(
   CategoryScale,
@@ -43,8 +45,11 @@ const options = {
     },
   },
 };
+interface PieChartCardProps {
+  status: "idle" | "loading" | "succeeded" | "failed";
+}
 
-const LineGraphCard = () => {
+const LineGraphCard: React.FC<PieChartCardProps> = ({status}) => {
 
   const [onBench, setOnBench] = useState<number>(1)
 
@@ -75,8 +80,16 @@ const LineGraphCard = () => {
 
       </div>
 
-      <div className='w-[100%] h-[80%] px-[40px] pb-[30px]'>
-        <Line data={data} options={options}/>
+      <div className='w-[100%] h-[80%] px-[40px] pb-[30px] flex justify-center items-center '>
+
+        {status === "succeeded" ? (
+          <Line data={data} options={options}/>
+        ) : (
+          <Spin
+            indicator={<LoadingOutlined spin style={{ fontSize: 48, color: '#8A7D66' }} />}
+          />
+        )}
+
       </div>
 
 

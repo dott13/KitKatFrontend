@@ -2,6 +2,8 @@ import {Doughnut} from "react-chartjs-2";
 import {Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions} from 'chart.js';
 import React, { useState} from "react";
 import {ReversedCountryAbbreviationMap} from "../../../utils/country.ts";
+import {Spin} from "antd";
+import {LoadingOutlined} from "@ant-design/icons";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -61,7 +63,11 @@ const options: ChartOptions<'doughnut'> = {
   },
 };
 
-const PieChartCard: React.FC = () => {
+interface PieChartCardProps {
+  status: "idle" | "loading" | "succeeded" | "failed";
+}
+
+const PieChartCard: React.FC<PieChartCardProps> = ({status}) => {
 
   const [country, setCountry] = useState<string>("")
 
@@ -91,8 +97,15 @@ const PieChartCard: React.FC = () => {
         </select>
 
       </div>
-      <div  className=' h-[85%] w-full p-[20px]'>
-      <Doughnut className='m-auto' data={data} options={options}/>
+      <div  className=' h-[85%] w-full p-[20px] flex justify-center items-center'>
+
+        {status === "succeeded" ? (
+          <Doughnut  data={data} options={options}/>
+        ) : (
+          <Spin
+            indicator={<LoadingOutlined spin style={{ fontSize: 48, color: '#8A7D66' }} />}
+          />
+        )}
       </div>
     </div>
   );
