@@ -188,7 +188,7 @@ export const getAllUser = createAsyncThunk<
       skill = "",
       languages = "",
       roles = "",
-      page = 1,
+      page = 0,
       size = 9,
     } = filterParams || {};
 
