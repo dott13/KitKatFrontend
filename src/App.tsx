@@ -6,9 +6,25 @@ import EmployeesPageView from "./components/Manager/Employees/EmployeesPageView.
 import Layout from "./Layout.tsx";
 import Logout from "./utils/loginUtils/logout.tsx";
 import AccountPageView from "./components/Worker/Account/AccountPageView.tsx";
+import ProjectDetails from "./components/Worker/Project/ProjectDetails.tsx";
+import ProtectedRoute from "./components/layout/ProtectedRouteProps.tsx";
+import {getRoleFromToken} from "./utils/tokenUtils/getRoleFromToken.tsx";
+import UnauthorizedPage from "./components/UnauthorizedPage.tsx";
+
+interface UserRoles {
+  role: "ROLE_MANAGER"| "ROLE_USER" | "ROLE_ADMIN"
+}
+
+const validRoles: UserRoles["role"][] = ["ROLE_MANAGER", "ROLE_USER", "ROLE_ADMIN"];
+
 
 function App() {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const token = localStorage.getItem("token");
+  const userRole = (validRoles.includes(getRoleFromToken(token!) as UserRoles["role"])
+    ? getRoleFromToken(token!)
+    : null) as UserRoles["role"] | null;  console.log(userRole);
+
 
   return (
     <div className="bg-main">
@@ -27,12 +43,27 @@ function App() {
             }
           />
 
-          <Route element={<Layout />}>
-            <Route path="/dashboard" element={<DashboardPageView />} />
-            <Route path="/employees" element={<EmployeesPageView />} />
-            <Route path="/account" element={<AccountPageView/>}/>
-            <Route path="/project" />
-            <Route path="/settings" />
+          <Route element={<Layout role={userRole}/>}>
+
+            <Route path="/dashboard" element={<DashboardPageView />}/>
+            <Route path="/employees"
+              element={
+                <ProtectedRoute allowedRoles={["ROLE_MANAGER"]} userRole={userRole}>
+                  <EmployeesPageView />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/account"
+              element={
+                <ProtectedRoute allowedRoles={["ROLE_USER", "ROLE_MANAGER"]} userRole={userRole}>
+                  <AccountPageView />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/project" element={<ProjectDetails />}/>
+
+            <Route path="/unauthorized" element={<UnauthorizedPage/>} />
+
           </Route>
         </Routes>
       </BrowserRouter>

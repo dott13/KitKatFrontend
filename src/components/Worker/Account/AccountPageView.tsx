@@ -3,9 +3,10 @@ import AccountForm from "./AccountForm.tsx";
 
 
 const AccountPageView: React.FC = () => {
-
+  // TODO add new features (hiring someone)
   return (
     <>
+
       <AccountForm/>
 
 

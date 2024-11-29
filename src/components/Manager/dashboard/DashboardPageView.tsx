@@ -2,14 +2,17 @@ import React, {useEffect} from "react";
 import OnBenchStatCard from "./OnBenchStatCard";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
-import {getUsersOnBenchCount} from "../../../redux/userSlice/userSlice.tsx";
 import PieChartCard from "./PieChartCard.tsx";
 import LineGraphCard from "./LineGraphCard.tsx";
+import {getUsersOnBenchCount} from "../../../redux/statistic/statsSlice.tsx";
 
 
 const DashboardPageView: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const count = useSelector((state: RootState) => state.user.count);
+  const { count, status } = useSelector((state: RootState) => ({
+    count: state.stats.count,
+    status: state.stats.status,
+  }));
 
   useEffect(() => {
     dispatch(getUsersOnBenchCount());
@@ -24,6 +27,7 @@ const DashboardPageView: React.FC = () => {
           warning={"circle"}
           title={"on Bench"}
           description={"High number of employees on bench"}
+          status={status}
         />
       </div>
 
@@ -35,6 +39,7 @@ const DashboardPageView: React.FC = () => {
           warning={"octagon"}
           title={"average time of waiting"}
           description={"High number of employees on bench"}
+          status={status}
         />
       </div>
         <div className="col-span-1 row-span-1">
@@ -45,15 +50,20 @@ const DashboardPageView: React.FC = () => {
           warning={"triangle"}
           title={"on Bench in UK"}
           description={"High number of employees on bench"}
+          status={status}
         />
         </div>
 
       <div className="col-span-1 row-span-2">
-      <PieChartCard/>
+      <PieChartCard
+        status={status}
+      />
       </div>
 
       <div className='col-span-2 row-span-2'>
-        <LineGraphCard/>
+        <LineGraphCard
+          status={status}
+        />
       </div>
 
     </div>

@@ -7,12 +7,13 @@ import {TbWorld} from "react-icons/tb";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
-import { updateUser} from "../../../redux/userSlice/userSlice.tsx";
+import {getUserByEmail, updateUser} from "../../../redux/userSlice/userSlice.tsx";
 import {getIdFromToken} from "../../../utils/tokenUtils/getIdFromToken.tsx";
 import {LanguageAbbreviations, languageAbbreviationsIdMap} from "../../../utils/languages.ts";
 import {CityIdMap, ReversedCountryIdMap} from "../../../utils/country.ts";
 import {JobTitleIdMap} from "../../../utils/Position.ts";
 import {JobTitleRankIdMap} from "../../../utils/Seniority.ts";
+import {getMailFromToken} from "../../../utils/tokenUtils/getMailFromToken.tsx";
 
 const CheckboxWithIcon = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -72,14 +73,16 @@ const AccountForm =()=>{
     languages: [],
     cv: new Uint8Array(),
   });
+  useEffect(() => {
+    dispatch(() => {
+      getUserByEmail(getMailFromToken(token!))
+      console.log(userRoot);
+    })}, [dispatch, token, userRoot])
+
 
   useEffect(() => {
-    const reverseLanguageIdMap = Object.fromEntries(
-      Object.entries(languageAbbreviationsIdMap).map(([key, value]) => [value, key])
-    );
 
-    const mappedLanguages = userRoot.user?.languages?.split(",")
-      .map((id: string) => reverseLanguageIdMap[parseInt(id, 10)]) // Map each ID to the language code
+    const mappedLanguages = userRoot.user?.languages.map((language) => language.languageName) // Map each ID to the language code
 
     setUser(() => ({
       firstName: userRoot.user?.firstName || "",
@@ -87,9 +90,9 @@ const AccountForm =()=>{
       email: userRoot.user?.email || "",
       avatar: new Uint8Array(),
       position: userRoot.user?.position || "",
-      seniority: userRoot.user?.seniority.name || "",
-      city: userRoot.user?.city.cityName || "",
-      country: userRoot.user?.city.country.countryName || "",
+      seniority: userRoot.user?.seniority?.name || "",
+      city: userRoot.user?.city?.cityName || "",
+      country: userRoot.user?.city?.country.countryName || "",
       languages: mappedLanguages || [],
       cv: new Uint8Array(),
     }));

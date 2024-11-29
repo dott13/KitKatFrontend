@@ -7,7 +7,6 @@ interface UserState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   list: UserModel[] | [];
-  count: number | null;
 }
 //Initial state for the slice for future all null so it reinitialized when called
 const initialState: UserState = {
@@ -16,7 +15,6 @@ const initialState: UserState = {
   status: "idle",
   error: null,
   list: [],
-  count: null,
 };
 
 interface UserModel {
@@ -26,20 +24,23 @@ interface UserModel {
   email: string;
   avatar: Uint8Array;
   seniority: {
-    "seniortyId": number;
+    "seniorityId": number;
     "name": string;
-  };
+  } | null;
   role: string;
-  languages: string;
+  languages: {
+    languageId: number,
+    languageName: string
+  }[];
   skills: string[];
   city: {
     cityId:string;
     cityName: string,
     country: {
-      countryId: 2,
+      countryId: number,
       countryName: string
     }
-  };
+  } | null;
   position: string | null;
   status: {
     statusId: number;
@@ -60,6 +61,18 @@ interface UpdateUser{
   languages: string | null;
   cv: Uint8Array | null;
 }
+
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+});
+
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 // Define the async thunks with correct return and reject types
 //Login Thunk
@@ -99,11 +112,11 @@ export const loginOTPUser = createAsyncThunk<
 
 export const getUserByEmail = createAsyncThunk<
   UserModel, // Return type
-  string, // Argument type: user email
+  string | null, // Argument type: user email
   { rejectValue: string } // Reject type
 >("user/getUserByEmail", async (email, thunkAPI) => {
   try {
-    const response = await axios.get(`/user/${email}`);
+    const response = await axiosInstance.get(`/user/${email}`);
     return response.data; // Assuming the response is the user object
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -120,7 +133,7 @@ export const registerUser = createAsyncThunk<
   { rejectValue: string } // Reject type
 >("user/registerUser", async (userInfo, thunkAPI) => {
   try {
-    const response = await axios.post("/api/register", userInfo);
+    const response = await axiosInstance.post("/api/register", userInfo);
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -136,7 +149,7 @@ export const resetPasswordUser = createAsyncThunk<
   { rejectValue: string } // Reject type
 >("user/reset-password", async (userInfo, thunkAPI) => {
   try {
-    const response = await axios.post("/user/reset-password", userInfo);
+    const response = await axiosInstance.post("/user/reset-password", userInfo);
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -152,7 +165,7 @@ export const getAllUser = createAsyncThunk<
   { rejectValue: string } // Reject value type
 >("user/all", async (_, thunkAPI) => {
   try {
-    const response = await axios.get("/manager/worker");
+    const response = await axiosInstance.get("/manager/worker");
     return response.data; // Directly return the array of users
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -169,7 +182,7 @@ export const updateUser = createAsyncThunk<
   {rejectValue: string } // Reject type
 >("user/update", async (userInfo,  thunkAPI) =>{
   try {
-    const response = await axios.put("/user/update", userInfo);
+    const response = await axiosInstance.put("/user/update", userInfo);
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -178,23 +191,6 @@ export const updateUser = createAsyncThunk<
     );
   }
 })
-
-
-export const getUsersOnBenchCount = createAsyncThunk<
-  number, // The type returned, a number (user count)
-  void, // No arguments are required for this thunk
-  { rejectValue: string } // The type for rejected errors
->("user/getUsersOnBenchCount", async (_, thunkAPI) => {
-  try {
-    const response = await axios.get("/user/without-project");
-    return response.data.count; // Expecting the count in the response
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to fetch bench count"
-    );
-  }
-});
 
 //Slice for adding to the redux store also name for using in Selectors later
 //We have reducers for every state of the slice loading rejected or approved so the data is flowing correctly
@@ -283,7 +279,7 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string;
       })
-      // getUser------------------------------------------------------------------------------------------------------
+      // getAllUser------------------------------------------------------------------------------------------------------
       .addCase(getAllUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -321,20 +317,6 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = "Something went wrong";
       })
-      .addCase(getUsersOnBenchCount.pending, (state) => {
-        state.status = "loading"; // Optionally handle loading state
-      })
-      .addCase(
-        getUsersOnBenchCount.fulfilled,
-        (state, action: PayloadAction<number>) => {
-          state.status = "succeeded";
-          state.count = action.payload; // Store the bench count
-        }
-      )
-      .addCase(getUsersOnBenchCount.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload as string; // Ensure correct type
-      });
   },
 });
 

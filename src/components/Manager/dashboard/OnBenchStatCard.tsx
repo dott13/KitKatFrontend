@@ -3,6 +3,9 @@ import bench from "../../../assets/svgs/bench-back.svg";
 import {MdAccessTimeFilled} from "react-icons/md";
 import {FaMapMarkerAlt} from "react-icons/fa";
 import {BiError, BiErrorAlt, BiErrorCircle} from "react-icons/bi";
+import { Spin } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
+
 
 
 
@@ -12,9 +15,10 @@ interface OnBenchStatData {
   description: string;
   icon: "bench"|"clock"|"map";
   warning: "triangle"|"octagon"|"circle"
+  status: "idle" | "loading" | "succeeded" | "failed";
 }
 
-const OnBenchStatCard: React.FC<OnBenchStatData> = ({title, count, description, icon, warning}) => {
+const OnBenchStatCard: React.FC<OnBenchStatData> = ({title, count, description, icon, warning, status}) => {
   const renderImage = ()=>{
 
       switch(icon){
@@ -53,7 +57,15 @@ const OnBenchStatCard: React.FC<OnBenchStatData> = ({title, count, description, 
           {renderImage()}
         </div>
         <p className="text-widget font-thin text-base  mt-2">{title}</p>
-        <span className="text-black text-2xl font-medium ">{count}</span>
+        <div>
+          {status === "succeeded" ? (
+            <span className="text-black text-2xl font-medium">{count}</span>
+          ) : (
+            <Spin
+              indicator={<LoadingOutlined spin style={{ fontSize: 24, color: '#8A7D66' }} />}
+            />
+          )}
+        </div>
         <hr className="border-t-2 border-widget  "/>
 
         <div className="flex  items-center mb-[-7px]  ml-4">

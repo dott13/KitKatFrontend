@@ -11,13 +11,47 @@ interface SideBarProps {
   pageState:"dashboard"|"employees"|"project"|"settings"|"logout"|"account"
 
 }
+interface SideBarState {
+  role: "ROLE_MANAGER"| "ROLE_USER" | "ROLE_ADMIN"|null
+}
 
-const SideBar = () => {
+
+const SideBar: React.FC<SideBarState> = ({role}) => {
+
+  const menuItems = [
+    {
+      label: "Dashboard",
+      icon: <PiSquaresFour className="w-[30px] h-[30px]" />,
+      path: "/dashboard",
+      allowedRoles: ["ROLE_MANAGER", "ROLE_USER", "ROLE_ADMIN"],
+    },
+    {
+      label: "Employees",
+      icon: <IoIosCheckboxOutline className="w-[30px] h-[30px]" />,
+      path: "/employees",
+      allowedRoles: ["ROLE_MANAGER", "ROLE_ADMIN"],
+    },
+    {
+      label: "Your Account",
+      icon: <FaUser className="w-[25px] h-[25px]" />,
+      path: "/account",
+      allowedRoles: ["ROLE_USER", "ROLE_ADMIN"],
+    },
+    {
+      label: "Projects",
+      icon: <AiOutlineFundProjectionScreen className="w-[30px] h-[30px]" />,
+      path: "/project",
+      allowedRoles: ["ROLE_MANAGER", "ROLE_ADMIN", "ROLE_USER"],
+    },
+  ];
   const location = useLocation();
 
   const navigate = useNavigate();
 
-  // Get the last part of the URL to use as the pageState
+  const filteredMenuItems = role
+    ? menuItems.filter((item) => item.allowedRoles.includes(role))
+    : [];
+
   const pageState = location.pathname.split(
     "/"
   )[1] as SideBarProps["pageState"];
@@ -35,44 +69,18 @@ const SideBar = () => {
           <p className="font-bold">MENU</p>
           <nav className="mt-4">
             <ul>
-              <li
-                className={`font-light h-14 text-[18px] flex items-center gap-[10%] px-[5%]  rounded ${
-                  pageState === "dashboard"
-                    ? "bg-widget text-white"
-                    : "bg-white"
-                }`}
-                onClick={() => navigate("/dashboard")}
-              >
-                  <PiSquaresFour className="w-[30px] h-[30px]"/>
-                <p>Dashboard</p>
-              </li>
-              <li
-                className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%] rounded ${
-                  pageState === "employees"
-                    ? "bg-widget text-white"
-                    : "bg-white"
-                }`}
-                onClick={() => navigate("employees")}
-              >
-                  <IoIosCheckboxOutline className="w-[30px] h-[30px]"/>
-                <p>Employees</p>
-              </li>
-              <li
-                  className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%] rounded ${pageState === "account" ? 'bg-widget text-white' : 'bg-white'}`}
-                  onClick={() => navigate("account")}
-                >
-                  <FaUser className="w-[25px] h-[25px]"/>
-                  <p>Your Account</p>
-                </li>
+              {filteredMenuItems.map((item) => (
                 <li
-                className={`font-light text-[18px] h-14 flex items-center gap-[10%] px-[5%]  rounded ${
-                  pageState === "project" ? "bg-widget text-white" : "bg-white"
-                }`}
-                onClick={() => navigate("/project")}
-              >
-                  <AiOutlineFundProjectionScreen className="w-[30px] h-[30px]"/>
-                <p>Projects</p>
-              </li>
+                  key={item.path}
+                  className={`font-light h-14 text-[18px] flex items-center gap-[10%] px-[5%] rounded ${
+                    pageState === item.path.slice(1) ? "bg-widget text-white" : "bg-white"
+                  }`}
+                  onClick={() => navigate(item.path)}
+                >
+                  {item.icon}
+                  <p>{item.label}</p>
+                </li>
+              ))}
             </ul>
           </nav>
 
