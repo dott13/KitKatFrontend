@@ -7,6 +7,8 @@ interface UserState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   list: UserModel[] | [];
+  totalPages: number;
+  currentPage: number;
 }
 //Initial state for the slice for future all null so it reinitialized when called
 const initialState: UserState = {
@@ -15,6 +17,8 @@ const initialState: UserState = {
   status: "idle",
   error: null,
   list: [],
+  totalPages: 0,
+  currentPage: 1,
 };
 
 interface UserModel {
@@ -24,22 +28,22 @@ interface UserModel {
   email: string;
   avatar: Uint8Array;
   seniority: {
-    "seniorityId": number;
-    "name": string;
+    seniorityId: number;
+    name: string;
   } | null;
   role: string;
   languages: {
-    languageId: number,
-    languageName: string
+    languageId: number;
+    languageName: string;
   }[];
   skills: string[];
   city: {
-    cityId:string;
-    cityName: string,
+    cityId: string;
+    cityName: string;
     country: {
-      countryId: number,
-      countryName: string
-    }
+      countryId: number;
+      countryName: string;
+    };
   } | null;
   position: string | null;
   status: {
@@ -50,7 +54,7 @@ interface UserModel {
   languageIdList: number[];
 }
 
-interface UpdateUser{
+interface UpdateUser {
   userId: number;
   firstName: string | null;
   lastName: string | null;
@@ -60,6 +64,17 @@ interface UpdateUser{
   city: string | null;
   languages: string | null;
   cv: Uint8Array | null;
+}
+
+interface UserFilterParams {
+  position?: string;
+  seniority?: string;
+  country?: string;
+  skill?: string;
+  languages?: string;
+  roles?: string;
+  page?: number;
+  size?: number;
 }
 
 const axiosInstance = axios.create({
@@ -160,27 +175,70 @@ export const resetPasswordUser = createAsyncThunk<
 });
 
 export const getAllUser = createAsyncThunk<
-  UserModel[] , // Return type
-  void,
-  { rejectValue: string } // Reject value type
->("user/all", async (_, thunkAPI) => {
+  { users: UserModel[]; totalPages: number; currentPage: number }, // Return type with pagination info
+  UserFilterParams | void, // Allow optional filter parameters
+  { rejectValue: string }
+>("user/all", async (filterParams = {}, thunkAPI) => {
   try {
-    const response = await axiosInstance.get("/manager/worker");
-    return response.data; // Directly return the array of users
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    console.error("API Error:", error); // Log any API errors
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Get all workers failed"
+    // Destructure filter parameters with default values
+    const {
+      position = "",
+      seniority = "",
+      country = "",
+      skill = "",
+      languages = "",
+      roles = "",
+      page = 1,
+      size = 9,
+    } = filterParams || {};
+
+    // Construct query parameters
+    const queryParams = new URLSearchParams({
+      position,
+      seniority,
+      country,
+      skill,
+      languages,
+      roles,
+      page: page.toString(),
+      size: size.toString(),
+    });
+
+    // Remove empty parameters
+    for (const [key, value] of queryParams.entries()) {
+      if (value === "") {
+        queryParams.delete(key);
+      }
+    }
+
+    const response = await axiosInstance.get(
+      `/manager/filter?${queryParams.toString()}`
     );
+
+    return {
+      users: response.data.content,
+      totalPages: response.data.totalPages,
+      currentPage: response.data.number,
+    };
+  } catch (error) {
+    // Type guard to check if error is an axios error
+    if (axios.isAxiosError(error)) {
+      console.error("API Error:", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Get filtered workers failed"
+      );
+    }
+
+    // Handle non-axios errors
+    return thunkAPI.rejectWithValue("An unexpected error occurred");
   }
 });
 
 export const updateUser = createAsyncThunk<
-  {message:string},// Return type
+  { message: string }, // Return type
   UpdateUser,
-  {rejectValue: string } // Reject type
->("user/update", async (userInfo,  thunkAPI) =>{
+  { rejectValue: string } // Reject type
+>("user/update", async (userInfo, thunkAPI) => {
   try {
     const response = await axiosInstance.put("/user/update", userInfo);
     return response.data;
@@ -190,7 +248,7 @@ export const updateUser = createAsyncThunk<
       error.response?.data?.message || "Update Password failed"
     );
   }
-})
+});
 
 //Slice for adding to the redux store also name for using in Selectors later
 //We have reducers for every state of the slice loading rejected or approved so the data is flowing correctly
@@ -286,25 +344,27 @@ const userSlice = createSlice({
       })
       .addCase(getAllUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.list = action.payload; // Store the user data in state
+        state.list = action.payload.users; // Store the user data in state
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
       })
       .addCase(getAllUser.rejected, (state) => {
         state.status = "failed";
         state.error = "Something went wrong"; // Handle error
       })
-// updateUser---------------------------------------------------------------------------------------------------
+      // updateUser---------------------------------------------------------------------------------------------------
       .addCase(updateUser.pending, (state) => {
-      state.status = "loading";
-      state.error = null;
-    })
+        state.status = "loading";
+        state.error = null;
+      })
       .addCase(updateUser.fulfilled, (state) => {
         state.status = "succeeded";
       })
       .addCase(updateUser.rejected, (state) => {
         state.status = "failed";
-        state.error =  "Something went wrong"; // Handle error
+        state.error = "Something went wrong"; // Handle error
       })
-// getUserByEmail----------------------------------------------------------------------------------------------
+      // getUserByEmail----------------------------------------------------------------------------------------------
       .addCase(getUserByEmail.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -316,7 +376,7 @@ const userSlice = createSlice({
       .addCase(getUserByEmail.rejected, (state) => {
         state.status = "failed";
         state.error = "Something went wrong";
-      })
+      });
   },
 });
 
