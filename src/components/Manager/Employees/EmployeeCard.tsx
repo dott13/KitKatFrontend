@@ -6,14 +6,22 @@ import { RiRadioButtonLine } from "react-icons/ri";
 interface EmployeeCardProps {
   user: {
     id: number;
-    firstName: string | null;
-    lastName: string | null;
-    email: string | null;
-    seniority: string | null;
-    city: string | null;
-    role: string | null;
-    skills: string[] | null;
-    status: "Available" | "On Project" | null;
+    firstName: string;
+    lastName: string;
+    email: string;
+    position?: { name: string };
+    seniority?: { name: string };
+    city?: { cityName: string; country: { countryName: string } };
+    role?: { name: string };
+    skillRating?: Array<{
+      skill: {
+        name: string;
+        skillType: {
+          name: string;
+        };
+      };
+    }>;
+    status?: { name: string };
   };
   isOpen: boolean;
   onToggleStatus: () => void;
@@ -21,13 +29,13 @@ interface EmployeeCardProps {
 
 const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
   ({ user, isOpen, onToggleStatus }, ref) => {
-    const topSkills = user.skills?.slice(0, 3);
+    // Extract top skills (adjust based on actual skill structure)
+    const topSkills = user.skillRating
+      ?.slice(0, 3)
+      .map((skillRating) => skillRating.skill.name);
 
-    // Extract and normalize country
-    let country = user.city ? user.city.split(",").pop()?.trim() : null;
-    if (country === "United States") {
-      country = "US";
-    }
+    // Extract country
+    const country = user.city?.country?.countryName || "Unknown";
 
     return (
       <div
@@ -51,25 +59,25 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
         <div className="flex justify-between m-4 items-center text-center">
           <span
             className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
-            title={`${user.seniority}`}
+            title={user.seniority?.name}
           >
-            {user.seniority}
+            {user.seniority?.name}
           </span>
           <span
             className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
-            title={`${country}`}
+            title={country}
           >
             {country}
           </span>
           <span
             className="mr-2 text-sm font-bold bg-widget px-2 py-1 flex-1 rounded truncate"
-            title={`${user.role}`}
+            title={user.position?.name}
           >
-            {user.role}
+            {user.position?.name}
           </span>
         </div>
         <div className="flex justify-start m-4">
-          {topSkills?.map((skill, index) => (
+          {topSkills?.map((skill: string, index: number) => (
             <span
               key={index}
               className="mr-2 text-[0.625rem] text-black font-light bg-white border-widget border-[1px] px-2 py-1 rounded"
@@ -83,19 +91,19 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
             <div className="flex items-center">
               <RiRadioButtonLine
                 className={`mr-2 ${
-                  user.status === "On Project"
+                  user.status?.name === "INACTIVE"
                     ? "text-red-500"
                     : "text-green-500"
                 }`}
               />
               <p
                 className={`mr-2 ${
-                  user.status === "On Project"
+                  user.status?.name === "INACTIVE"
                     ? "text-red-500"
                     : "text-green-500"
                 }`}
               >
-                {user.status === "On Project" ? "Assigned" : user.status}
+                {user.status?.name}
               </p>
             </div>
             <button onClick={onToggleStatus} className="text-blue-500">
