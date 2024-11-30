@@ -5,6 +5,8 @@ import {AppDispatch, RootState} from "../../../redux/store/configureStore.tsx";
 import PieChartCard from "./PieChartCard.tsx";
 import LineGraphCard from "./LineGraphCard.tsx";
 import {getUsersOnBenchCount} from "../../../redux/statistic/statsSlice.tsx";
+import {useLocation} from "react-router-dom";
+import {getRoleFromToken} from "../../../utils/tokenUtils/getRoleFromToken.tsx";
 
 
 const DashboardPageView: React.FC = () => {
@@ -13,6 +15,28 @@ const DashboardPageView: React.FC = () => {
     count: state.stats.count,
     status: state.stats.status,
   }));
+
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const jwt = params.get('jwt');
+
+    if (jwt) {
+      localStorage.setItem('token', jwt);
+      localStorage.setItem('isLoggedIn', 'true');
+      if (getRoleFromToken(jwt) === "ROLE_USER"){
+        window.location.href = '/account';
+
+      }else{
+        window.location.href = '/dashboard';
+
+      }
+
+    }
+  }, [location]);
+
 
   useEffect(() => {
     dispatch(getUsersOnBenchCount());

@@ -19,6 +19,8 @@ interface LoginFormData {
   toggleForm: (toggleType: "login" | "register" | "reset" | "redirect" | "otp") => void;
 }
 
+
+
 const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
   const [formData, setFormData] = useState<Partial<LoginFormData>>({
     email: "",
@@ -93,6 +95,10 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
       }
     }
   };
+
+  const handleGoogleOauth = () => {
+    window.location.href = 'http://localhost:8080/login/oauth2/code/google';
+  }
 
   return (
     <div className="w-96 m-auto bg-widget border-solid border-inherit border-[1px] rounded-[10px] mt-10">
@@ -184,7 +190,9 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
 
           <p className="text-[13px] my-6 text-center">or continue with</p>
           <div className="flex justify-center items-center">
-            <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded">
+            <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded"
+                    onClick={handleGoogleOauth}
+            >
               <FcGoogle className="m-auto" size={24}/>
             </button>
             <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
