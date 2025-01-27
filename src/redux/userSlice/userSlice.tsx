@@ -45,7 +45,10 @@ interface UserModel {
       countryName: string;
     };
   } | null;
-  position: string | null;
+  position: {
+    positionId: number;
+    name: string;
+  } | null;
   status: {
     statusId: number;
     name: string;
