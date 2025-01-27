@@ -16,7 +16,10 @@ interface EmployeeListItemProps {
       cityName: string;
       country: { countryId: number; countryName: string };
     } | null;
-    role?: string;
+    role: {
+      roleId: number;
+      name: string;
+    } | null;
     skillRating?: Array<{
       skill: {
         name: string;
@@ -61,7 +64,7 @@ const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
           <p>{user.seniority?.name}</p>
         </div>
         <div className="text-black rounded border-2 border-widget p-3">
-          <p>{user.role}</p>
+          <p>{user.role?.name}</p>
         </div>
         <div className="text-black rounded border-2 border-widget p-3">
           <p>

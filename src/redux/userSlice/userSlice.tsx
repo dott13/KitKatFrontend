@@ -31,7 +31,10 @@ interface UserModel {
     seniorityId: number;
     name: string;
   } | null;
-  role: string;
+  role: {
+    roleId: number;
+    name: string;
+  } | null;
   languages: {
     languageId: number;
     languageName: string;
