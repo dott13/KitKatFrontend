@@ -1,27 +1,25 @@
-import React, {useState} from "react";
-import {FcGoogle} from "react-icons/fc";
+import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 import OutlookIcon from "../../../assets/svgs/SvgExporter.tsx";
-import {FaRegEyeSlash, FaRegEye} from "react-icons/fa";
-import {FiAlertTriangle} from "react-icons/fi";
-import {Tooltip} from "antd"; // Import Ant Design Tooltip
-import {loginUser} from "../../../redux/userSlice/userSlice.tsx";
-import {AppDispatch} from "../../../redux/store/configureStore";
-import {useDispatch} from "react-redux";
-import "./login-button.css"
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { FiAlertTriangle } from "react-icons/fi";
+import { Tooltip } from "antd"; // Import Ant Design Tooltip
+import { loginUser } from "../../../redux/userSlice/userSlice.tsx";
+import { AppDispatch } from "../../../redux/store/configureStore";
+import { useDispatch } from "react-redux";
+import "./login-button.css";
 import logo from "../../../assets/logo-white.png";
-
-
 
 interface LoginFormData {
   email: string;
   setEmail: (email: string) => void;
   password: string;
-  toggleForm: (toggleType: "login" | "register" | "reset" | "redirect" | "otp") => void;
+  toggleForm: (
+    toggleType: "login" | "register" | "reset" | "redirect" | "otp"
+  ) => void;
 }
 
-
-
-const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
+const LoginForm: React.FC<LoginFormData> = ({ toggleForm, setEmail }) => {
   const [formData, setFormData] = useState<Partial<LoginFormData>>({
     email: "",
     password: "",
@@ -36,7 +34,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
@@ -60,7 +58,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     if (isLoading) return;
-    setIsLoading(true)
+    setIsLoading(true);
     e.preventDefault();
 
     if (validateForm()) {
@@ -72,8 +70,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
           })
         ).unwrap();
         setEmail(formData.email as string);
-        toggleForm("otp")
-
+        toggleForm("otp");
       } catch (error) {
         if (typeof error === "string") {
           if (error.includes("User not found")) {
@@ -90,19 +87,19 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
             console.error("Error during login:", error);
           }
         }
-      }finally {
+      } finally {
         setIsLoading(false);
       }
     }
   };
 
   const handleGoogleOauth = () => {
-    window.location.href = 'http://localhost:8080/login/oauth2/code/google';
-  }
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  };
 
   return (
     <div className="w-96 m-auto bg-widget border-solid border-inherit border-[1px] rounded-[10px] mt-10">
-      <img className="mt-4 w-50 h-20 m-auto" src={logo} alt="Logo"/>
+      <img className="mt-4 w-50 h-20 m-auto" src={logo} alt="Logo" />
 
       <form onSubmit={handleSubmit}>
         <div className="mt-4 pb-6 flex flex-col mx-12">
@@ -130,7 +127,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
                   placement="top"
                   overlayClassName="custom-tooltip" //Class for changing the style of antds tooltips
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]"/>
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%]" />
                 </Tooltip>
               )}
             </div>
@@ -159,7 +156,7 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
                   placement="top"
                   overlayClassName="custom-tooltip"
                 >
-                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items"/>
+                  <FiAlertTriangle className="absolute left-3 text-red-500 top-[40%] align-items" />
                 </Tooltip>
               )}
               <div
@@ -167,16 +164,18 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
                 className="absolute right-3 cursor-pointer top-[40%]"
               >
                 {showPassword ? (
-                  <FaRegEyeSlash className="text-gray-500"/>
+                  <FaRegEyeSlash className="text-gray-500" />
                 ) : (
-                  <FaRegEye className="text-gray-500"/>
+                  <FaRegEye className="text-gray-500" />
                 )}
               </div>
             </div>
           </div>
 
-          <a className="mt-4 hover:underline inline-block text-sm hover:cursor-pointer"
-             onClick={() => toggleForm("reset")}>
+          <a
+            className="mt-4 hover:underline inline-block text-sm hover:cursor-pointer"
+            onClick={() => toggleForm("reset")}
+          >
             Forgot Password?
           </a>
 
@@ -190,13 +189,14 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
 
           <p className="text-[13px] my-6 text-center">or continue with</p>
           <div className="flex justify-center items-center">
-            <button className="login-animated-button bg-button w-36 py-3 mr-3 rounded"
-                    onClick={handleGoogleOauth}
+            <button
+              className="login-animated-button bg-button w-36 py-3 mr-3 rounded"
+              onClick={handleGoogleOauth}
             >
-              <FcGoogle className="m-auto" size={24}/>
+              <FcGoogle className="m-auto" size={24} />
             </button>
             <button className="login-animated-button bg-button w-36 py-3 ml-3 rounded">
-              <OutlookIcon className="m-auto"/>
+              <OutlookIcon className="m-auto" />
             </button>
           </div>
           <p className="my-6 text-xs">
@@ -204,7 +204,9 @@ const LoginForm: React.FC<LoginFormData> = ({toggleForm, setEmail}) => {
             <a
               className="font-semibold ml-1 hover:underline hover:cursor-pointer inline-block"
               onClick={() => toggleForm("register")}
-            > Register here
+            >
+              {" "}
+              Register here
             </a>
           </p>
         </div>

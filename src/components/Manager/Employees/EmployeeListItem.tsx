@@ -7,7 +7,10 @@ interface EmployeeListItemProps {
     firstName: string;
     lastName: string;
     email: string;
-    seniority?: { name: string };
+    seniority?: {
+      seniorityId: number;
+      name: string;
+    };
     city?: { cityName: string; country: { countryName: string } };
     role?: { name: string };
     skillRating?: Array<{
