@@ -16,7 +16,10 @@ interface EmployeeCardProps {
       cityName: string;
       country: { countryId: number; countryName: string };
     } | null;
-    role?: string;
+    role: {
+      roleId: number;
+      name: string;
+    } | null;
     skillRating?: Array<{
       skill: {
         name: string;

@@ -53,7 +53,7 @@ interface UserData {
   lastName: string;
   email: string;
   avatar: Uint8Array;
-  position: string;
+  position: string | { positionId: number; name: string };
   seniority: string;
   city: string;
   country: string;
@@ -272,11 +272,10 @@ const AccountForm = () => {
             user.avatar && user.avatar.length > 0
               ? (user.avatar as Uint8Array)
               : null,
-          position: user.position
-            ? //todo find the right request type :((
-              // JobTitleIdMap[user.position].toString()
-              user.position
-            : null,
+          position:
+            typeof userRoot.user?.position === "string"
+              ? userRoot.user?.position
+              : userRoot.user?.position?.name || "",
           seniority: user.seniority ? (user.seniority as string) : null,
           city: user.city ? user.city : null,
           languages:
@@ -579,7 +578,11 @@ const AccountForm = () => {
                   id="position"
                   className="w-full h-full focus:outline-0 cursor-pointer"
                   onChange={handleChange}
-                  value={user.position}
+                  value={
+                    typeof user.position === "string"
+                      ? user.position
+                      : user.position?.name || ""
+                  }
                 >
                   <option value="">Select Position</option>
                   {Object.entries(JobTitleIdMap).map(([title, id]) => (

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "../../utils/axiosInstance";
 import axios from "axios";
 
 interface UserState {
@@ -31,7 +32,10 @@ interface UserModel {
     seniorityId: number;
     name: string;
   } | null;
-  role: string;
+  role: {
+    roleId: number;
+    name: string;
+  } | null;
   languages: {
     languageId: number;
     languageName: string;
@@ -52,6 +56,9 @@ interface UserModel {
   status: {
     statusId: number;
     name: string;
+  } | null;
+  project: {
+    projectId: number;
   } | null;
   managerId: number | null;
   languageIdList: number[];
@@ -79,19 +86,6 @@ interface UserFilterParams {
   page?: number;
   size?: number;
 }
-
-const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-});
-
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 // Define the async thunks with correct return and reject types
 //Login Thunk
 export const loginUser = createAsyncThunk<

@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store/configureStore";
 import { getAllUser } from "../../../redux/userSlice/userSlice";
 import { Spin } from "antd";
+import axios from "axios";
 
 // Define filter options based on your backend data
 const filterOptions = {
@@ -41,6 +42,38 @@ const EmployeesPageView: React.FC = () => {
   const [view, setView] = useState<"card" | "list">("card");
   const [openUserId, setOpenUserId] = useState<number | null>(null);
   const usersPerPage = 9;
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+
+  const handleExportToExcel = async () => {
+    if (isExporting) return;
+
+    setIsExporting(true);
+    try {
+      const token = localStorage.getItem("token"); // Assuming token is stored here
+      const response = await axios.get(
+        "http://localhost:8080/manager/excel/export",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: "blob", // Important to handle binary file responses
+        }
+      );
+
+      // Create a Blob from the response
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "employees.xlsx"); // File name
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // Clean up
+    } catch (error) {
+      console.error("Error exporting Excel:", error);
+    }
+
+    setIsExporting(false);
+  };
 
   // Updated filter state with comma-separated strings
   const [selectedFilters, setSelectedFilters] = useState({
@@ -295,7 +328,14 @@ const EmployeesPageView: React.FC = () => {
             </div>
           )}
         </div>
-
+        <button
+          onClick={handleExportToExcel}
+          className="px-4 py-2 rounded bg-green-700 font-bold shadow-xl flex items-center"
+          disabled={isExporting} // Disable while exporting
+        >
+          {isExporting ? <Spin size="small" className="mr-2" /> : null}
+          Export Excel
+        </button>
         <button
           onClick={applyFilters}
           className="px-4 py-2 rounded bg-filters font-bold shadow-xl"
