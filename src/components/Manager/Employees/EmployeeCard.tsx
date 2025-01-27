@@ -9,10 +9,14 @@ interface EmployeeCardProps {
     firstName: string;
     lastName: string;
     email: string;
-    position?: { name: string };
-    seniority?: { name: string };
-    city?: { cityName: string; country: { countryName: string } };
-    role?: { name: string };
+    position?: { positionId: number; name: string } | null;
+    seniority?: { seniorityId: number; name: string } | null;
+    city?: {
+      cityId: string;
+      cityName: string;
+      country: { countryId: number; countryName: string };
+    } | null;
+    role?: string;
     skillRating?: Array<{
       skill: {
         name: string;
@@ -21,7 +25,10 @@ interface EmployeeCardProps {
         };
       };
     }>;
-    status?: { name: string };
+    status?: {
+      statusId: number;
+      name: string;
+    } | null;
   };
   isOpen: boolean;
   onToggleStatus: () => void;

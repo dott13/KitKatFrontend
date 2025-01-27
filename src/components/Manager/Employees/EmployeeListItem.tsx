@@ -10,9 +10,13 @@ interface EmployeeListItemProps {
     seniority?: {
       seniorityId: number;
       name: string;
-    };
-    city?: { cityName: string; country: { countryName: string } };
-    role?: { name: string };
+    } | null;
+    city?: {
+      cityId: string;
+      cityName: string;
+      country: { countryId: number; countryName: string };
+    } | null;
+    role?: string;
     skillRating?: Array<{
       skill: {
         name: string;
@@ -25,7 +29,10 @@ interface EmployeeListItemProps {
       languageId: number;
       languageName: string;
     }>;
-    status?: { name: string };
+    status?: {
+      statusId: number;
+      name: string;
+    } | null;
   };
 }
 
@@ -54,7 +61,7 @@ const EmployeeListItem = forwardRef<HTMLDivElement, EmployeeListItemProps>(
           <p>{user.seniority?.name}</p>
         </div>
         <div className="text-black rounded border-2 border-widget p-3">
-          <p>{user.role?.name}</p>
+          <p>{user.role}</p>
         </div>
         <div className="text-black rounded border-2 border-widget p-3">
           <p>
